@@ -7,28 +7,28 @@
 </head>
 
 <body>
-    <div class="container">
-        <table class="table">
-            <h2>Application Components</h2>
-            <tr>
-                <th>Name</th>
-                <th>Directory</th>
-                <th>View</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            <tr th:each="component : ${components}">
-                <td th:text="${component.name}">Component Name</td>
-                <td th:text="${component.directory}">Component Directory</td>
-                <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/' + component.name}">View</a> </td>
-                <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/edit/' + component.name}">Edit</a>
-                </td>
-                <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/delete/' + component.name}">Delete</a>
-                </td>
-            </tr>
-        </table>
-        <a th:href="${'/appcomponent/new'}" class="btn btn-default">New</a>
-    </div>
+    <h2>Application Components</h2>
+
+    <table id="appcomponents" class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Directory</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="component : ${components}">
+            <td th:text="${component.name}">Component Name</td>
+            <td th:text="${component.directory}">Component Directory</td>
+            <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/' + component.name}">View</a> </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/edit/' + component.name}">Edit</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/delete/' + component.name}">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <a th:href="${'/appcomponent/new'}" class="btn btn-default">New</a>
+
 
 </body>
 

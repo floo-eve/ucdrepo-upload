@@ -1,6 +1,7 @@
 /target/
 testdb.mv.db
 .vscode/
+.attach_*
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -25,3 +26,4 @@ testdb.mv.db
 /dist/
 /nbdist/
 /.nb-gradle/
+
