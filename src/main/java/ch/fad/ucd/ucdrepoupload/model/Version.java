@@ -1,5 +1,8 @@
 package ch.fad.ucd.ucdrepoupload.model;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -8,15 +11,28 @@ import java.util.Objects;
 public class Version {
 
     private String directory;
-    private String file;
+    private List<File> files;
     private UcdComponent ucdComponent;
 
     public Version() {
     }
 
-    public Version(String directory, String file) {
+    public Version(String directory) {
         this.directory = directory;
-        this.file = file;
+        this.files = new ArrayList<File>();
+    }
+
+    public Version(String directory, List<File> files) {
+        this.directory = directory;
+        this.files = files;
+    }
+
+    public void addFile(File file) {
+        this.files.add(file);
+    }
+
+    public boolean removeFile(File file) {
+        return this.files.remove(file);
     }
 
     public String getDirectory() {
@@ -27,12 +43,12 @@ public class Version {
         this.directory = directory;
     }
 
-    public String getFile() {
-        return this.file;
+    public List<File> getFiles() {
+        return this.files;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 
     public UcdComponent getUcdComponent() {
@@ -48,8 +64,8 @@ public class Version {
         return this;
     }
 
-    public Version file(String file) {
-        this.file = file;
+    public Version file(List<File> files) {
+        this.files = files;
         return this;
     }
 
@@ -66,19 +82,18 @@ public class Version {
             return false;
         }
         Version version = (Version) o;
-        return Objects.equals(directory, version.directory) && Objects.equals(file, version.file)
+        return Objects.equals(directory, version.directory) && Objects.equals(files, version.files)
                 && Objects.equals(ucdComponent, version.ucdComponent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(directory, file, ucdComponent);
+        return Objects.hash(directory, ucdComponent);
     }
 
     @Override
     public String toString() {
-        return "{" + " directory='" + getDirectory() + "'" + ", file='" + getFile() + "'" + ", ucdComponent='"
-                + getUcdComponent() + "'" + "}";
+        return "{" + " directory='" + getDirectory() + "'" + "'" + ", ucdComponent='" + getUcdComponent() + "'" + "}";
     }
 
 }

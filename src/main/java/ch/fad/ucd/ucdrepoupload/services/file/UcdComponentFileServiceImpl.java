@@ -48,8 +48,9 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
                             for (File version : dirComponent.listFiles()) {
                                 if (version.isDirectory()) {
+                                    // TODO Add Files to Version
                                     File[] filesFromVersion = version.listFiles();
-                                    Version dirVersion = new Version(version.getName(), "Test.war");
+                                    Version dirVersion = new Version(version.getName());
                                     ucdcomponent.addVersion(dirVersion);
                                 }
                             }
