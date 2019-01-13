@@ -3,7 +3,11 @@ package ch.fad.ucd.ucdrepoupload.model;
 /**
  * ComponentType
  */
-public enum ComponentType {
-    application, mw
+public class ComponentType {
+    String type;
+
+    public ComponentType(String type) {
+        this.type = type;
+    }
 
 }

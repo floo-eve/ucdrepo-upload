@@ -2,6 +2,7 @@ package ch.fad.ucd.ucdrepoupload.services.map;
 
 import java.util.*;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
@@ -10,6 +11,7 @@ import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 /**
  * Map implementation for UcdComponentService
  */
+@Profile("map")
 @Service
 public class UcdComponentMapServiceImpl implements UcdComponentService {
 

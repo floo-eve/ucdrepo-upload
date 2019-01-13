@@ -31,7 +31,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadData() {
-        UcdComponent cadi = new UcdComponent("cadi", "/repolox/application/cadi", ComponentType.application);
+        UcdComponent cadi = new UcdComponent("cadi", "/repolox/application/cadi", new ComponentType("application"));
         Version cadiVersion1 = new Version("1.0.1", "cadi.war");
         Version cadiVersion2 = new Version("1.0.2", "cadi.war");
         Version cadiVersion3 = new Version("1.0.3", "cadi.war");
@@ -43,7 +43,7 @@ public class DataLoader implements CommandLineRunner {
 
         ucdComponentService.save(cadi);
 
-        UcdComponent sibad = new UcdComponent("sibad", "/repolox/application/sibad", ComponentType.application);
+        UcdComponent sibad = new UcdComponent("sibad", "/repolox/application/sibad", new ComponentType("application"));
         Version sibadVersion1 = new Version("1.0.1", "sibad.war");
         Version sibadVersion2 = new Version("1.0.2", "sibad.war");
         Version sibadVersion3 = new Version("1.0.3", "sibad.war");
