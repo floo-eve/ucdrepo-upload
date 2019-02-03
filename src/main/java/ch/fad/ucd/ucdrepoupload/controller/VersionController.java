@@ -26,8 +26,8 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{componentname}/version/new")
-    public String newVersion(@PathVariable String componentname, Model model) {
+    @GetMapping("/component/{type}/{componentname}/version/new")
+    public String newVersion(@PathVariable String type, @PathVariable String componentname, Model model) {
         UcdComponent component = ucdComponentService.findByName(componentname);
         Version version = new Version();
         version.setUcdComponent(component);
@@ -43,8 +43,8 @@ public class VersionController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{componentname}/version")
-    public String createVersion(Version version, Model model) {
+    @PostMapping("/component/{type}/{componentname}/version")
+    public String createVersion(@PathVariable String type, Version version, Model model) {
 
         System.out.println("directory" + version.getDirectory());
         System.out.println(version.getUcdComponent().getName());
@@ -53,7 +53,7 @@ public class VersionController {
         ucdComponentService.saveVersion(version);
         System.out.println();
 
-        return "redirect:/appcomponent/" + version.getUcdComponent().getName();
+        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
 
     }
 
@@ -64,7 +64,7 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{componentname}/version/{versionname}")
+    @GetMapping("/component/{type}/{componentname}/version/{versionname}")
     public String getVersionByName(@PathVariable String componentname, @PathVariable String versionname, Model model) {
         UcdComponent component = ucdComponentService.findByName(componentname);
 
@@ -86,7 +86,7 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{componentname}/version/edit/{versionname}")
+    @GetMapping("/component/{type}/{componentname}/version/edit/{versionname}")
     public String editVersion(@PathVariable String componentname, @PathVariable String versionname, Model model) {
 
         UcdComponent component = ucdComponentService.findByName(componentname);
@@ -109,11 +109,11 @@ public class VersionController {
      * @param version
      * @return
      */
-    @PostMapping("/component/{componentname}/version/{versionname}")
+    @PostMapping("/component/{type}/{componentname}/version/{versionname}")
 
-    public String updateVersion(Version version) {
+    public String updateVersion(@PathVariable String type, Version version) {
         ucdComponentService.saveVersion(version);
-        return "redirect:/component/" + version.getUcdComponent().getName() + "/version/";
+        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/";
     }
 
     /**
@@ -122,10 +122,10 @@ public class VersionController {
      * @param version
      * @return
      */
-    @PostMapping("/component/{componentname}/version/delete/{version}")
-    public String deleteVersion(Version version) {
+    @PostMapping("/component/{type}/{componentname}/version/delete/{version}")
+    public String deleteVersion(@PathVariable String type, Version version) {
         ucdComponentService.deleteVersion(version);
-        return "redirect:/appcomponent/" + version.getUcdComponent().getName();
+        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
     }
 
 }

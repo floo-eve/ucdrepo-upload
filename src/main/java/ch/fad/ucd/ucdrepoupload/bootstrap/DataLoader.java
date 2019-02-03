@@ -3,7 +3,6 @@ package ch.fad.ucd.ucdrepoupload.bootstrap;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import ch.fad.ucd.ucdrepoupload.model.ComponentType;
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.model.Version;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
@@ -31,7 +30,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadData() {
-        UcdComponent cadi = new UcdComponent("cadi", "/repolox/application/cadi", new ComponentType("application"));
+        UcdComponent cadi = new UcdComponent("cadi", "/repolox/application/cadi", "application");
         Version cadiVersion1 = new Version("1.0.1");
         Version cadiVersion2 = new Version("1.0.2");
         Version cadiVersion3 = new Version("1.0.3");
@@ -43,7 +42,7 @@ public class DataLoader implements CommandLineRunner {
 
         ucdComponentService.save(cadi);
 
-        UcdComponent sibad = new UcdComponent("sibad", "/repolox/application/sibad", new ComponentType("application"));
+        UcdComponent sibad = new UcdComponent("sibad", "/repolox/application/sibad", "application");
         Version sibadVersion1 = new Version("1.0.1");
         Version sibadVersion2 = new Version("1.0.2");
         Version sibadVersion3 = new Version("1.0.3");

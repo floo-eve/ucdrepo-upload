@@ -13,7 +13,7 @@
     <div class="container">
 
         <!-- th:action="@{'/version/{component}(component=*{ucdComponent.name})}"-->
-        <form th:object="${version}" th:action="@{/component/{ucdComponent}/version(ucdComponent=*{ucdComponent.name})}"
+        <form th:object="${version}" th:action="@{/component/{type}/{component}/version(type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
             method="post">
             <input type="hidden" th:field="*{ucdComponent.name}" />
             <div class="form-group">

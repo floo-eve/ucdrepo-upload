@@ -8,10 +8,10 @@
 
 <body>
     <ol class="breadcrumb">
-        <li><a href="#" th:href="${'/appcomponents'}">Home</a></li>
+        <li><a href="#" th:href="${'/components/'+ version.ucdComponent.type}">Home</a></li>
     </ol>
 
-    <h2 th:text="Version of ${version.uccomponent.name} Version: ${version.directory}">Versions of Component</h2>
+    <h2 th:text="|Version ${version.directory} of ${version.ucdComponent.name}|">Versions of Component</h2>
 
     <table id="files" class="table table-striped">
         <tr>

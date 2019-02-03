@@ -8,16 +8,16 @@ public class UcdComponent {
     private String directory;
     private ArrayList<Version> versions;
     private String parentDirectory;
-    private ComponentType componenttype;
+    private String type;
 
     public UcdComponent() {
 
     }
 
-    public UcdComponent(String name, String parentDirectory, ComponentType componenttype) {
+    public UcdComponent(String name, String parentDirectory, String type) {
         this.name = name;
         this.parentDirectory = parentDirectory;
-        this.componenttype = componenttype;
+        this.type = type;
         this.versions = new ArrayList<Version>();
         this.directory = this.parentDirectory + "/" + name;
     }
@@ -75,12 +75,12 @@ public class UcdComponent {
         this.versions = versions;
     }
 
-    public ComponentType getComponenttype() {
-        return this.componenttype;
+    public String getType() {
+        return this.type;
     }
 
-    public void setComponenttype(ComponentType componentype) {
-        this.componenttype = componentype;
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

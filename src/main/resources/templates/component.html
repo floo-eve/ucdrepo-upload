@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Application Component Details</title>
+    <title>Component Details</title>
 </head>
 
 <body>
     <ol class="breadcrumb">
-        <li><a href="#" th:href="${'/appcomponents'}">Home</a></li>
+        <li><a href="#" th:href="${'/index'}">Home</a></li>
+        <li><a href="#" th:href="${'/component/'+component.type +'/list'}">Application</a></li>
     </ol>
 
     <h2 th:text="${component.name}">Component Details</h2>
@@ -22,16 +23,16 @@
         </tr>
         <tr th:each="version: ${component.versions}">
             <td th:text="${version.directory}">Version</td>
-            <td><a class="btn btn-default" href="#" th:href="${'component/' + component.name + '/version/' + version.directory}">View</a>
+            <td><a class="btn btn-default" href="#" th:href="${component.name + '/version/' + version.directory}">View</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'/component/' + component.name + '/version/edit/' + version.directory}">Edit</a>
+            <td><a class="btn btn-default" href="#" th:href="${component.name + '/version/edit/' + version.directory}">Edit</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'/component/' + component.name +'/version/delete/' + version.directory}">Delete</a>
+            <td><a class="btn btn-default" href="#" th:href="${component.name +'/version/delete/' + version.directory}">Delete</a>
             </td>
         </tr>
     </table>
 
-    <a th:href="${'/component/'+ component.name + '/version/new/'}" class="btn btn-default">New</a>
+    <a th:href="${component.name + '/version/new/'}" class="btn btn-default">New</a>
 
 
 

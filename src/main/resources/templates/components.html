@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Application Components</title>
+</head>
+
+<body>
+    <h2 th:text="|${type} components|">Application Components</h2>
+
+    <table id="components" class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Directory</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="component : ${components}">
+            <td th:text="${component.name}">Component Name</td>
+            <td th:text="${component.directory}">Component Directory</td>
+            <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/component/'+ type +'/edit/' + component.name}">Edit</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/component/' + type +'/delete/' + component.name}">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <a th:href="${'/component/' + type +'/new'}" class="btn btn-default">New</a>
+
+
+</body>
+
+</html>

@@ -10,8 +10,8 @@
 <body>
     <h2>Create / Edit Component</h2>
     <div class="container">
-        <form th:object="${component}" th:action="@{/appcomponent}" method="post">
-            <input type="hidden" th:field="*{componenttype.type}" />
+        <form th:object="${component}" th:action="@{/component/{type}(type=*{type})}" method="post">
+            <input type="hidden" th:field="*{type}" />
             <div class="form-group">
                 <label>Name</label>
                 <input type="text" th:field="*{name}" class="form-control" placeholder="Name">

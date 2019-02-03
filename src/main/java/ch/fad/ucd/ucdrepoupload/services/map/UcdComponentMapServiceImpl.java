@@ -1,12 +1,12 @@
 package ch.fad.ucd.ucdrepoupload.services.map;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import ch.fad.ucd.ucdrepoupload.model.Version;
-import ch.fad.ucd.ucdrepoupload.model.ComponentType;
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 
@@ -21,6 +21,15 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
 
     public Set<UcdComponent> findAll() {
         return new HashSet<>(map.values());
+    }
+
+    public Set<UcdComponent> findAllByType(String type) {
+
+        // Map -> Stream -> Filter -> Map
+        Map<String, UcdComponent> collect = map.entrySet().stream().filter(map -> map.getValue().getType().equals(type))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+
+        return new HashSet<>(collect.values());
     }
 
     public UcdComponent findById(String id) {
@@ -39,8 +48,9 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
         return null; // --> @todo is this correct?
     }
 
-    public String findComponentTypeDirectory(ComponentType type) {
-        return type.getType();
+    public String findComponentTypeDirectory(String type) {
+        // TODO setdirectory
+        return type;
     }
 
     public UcdComponent save(UcdComponent object) {
