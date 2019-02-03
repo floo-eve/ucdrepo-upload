@@ -7,23 +7,28 @@ public class UcdComponent {
     private String name;
     private String directory;
     private ArrayList<Version> versions;
-
-    private ComponentType componentype;
+    private String parentDirectory;
+    private ComponentType componenttype;
 
     public UcdComponent() {
 
     }
 
-    public UcdComponent(String name, String directory, ComponentType componenttype) {
+    public UcdComponent(String name, String parentDirectory, ComponentType componenttype) {
         this.name = name;
-        this.directory = directory;
-        this.componentype = componenttype;
+        this.parentDirectory = parentDirectory;
+        this.componenttype = componenttype;
         this.versions = new ArrayList<Version>();
+        this.directory = this.parentDirectory + "/" + name;
     }
 
     public void addVersion(Version version) {
         version.setUcdComponent(this);
         versions.add(version);
+    }
+
+    public void removeVersion(Version version) {
+        versions.remove(version);
     }
 
     /**
@@ -47,6 +52,14 @@ public class UcdComponent {
         return this.directory;
     }
 
+    public String getParentDirectory() {
+        return this.parentDirectory;
+    }
+
+    public void setParentDirectory(String parentDirectory) {
+        this.parentDirectory = parentDirectory;
+    }
+
     /**
      * @param directory the directory to set
      */
@@ -62,12 +75,12 @@ public class UcdComponent {
         this.versions = versions;
     }
 
-    public ComponentType getComponentype() {
-        return this.componentype;
+    public ComponentType getComponenttype() {
+        return this.componenttype;
     }
 
-    public void setComponentype(ComponentType componentype) {
-        this.componentype = componentype;
+    public void setComponenttype(ComponentType componentype) {
+        this.componenttype = componentype;
     }
 
 }

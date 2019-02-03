@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
 
+
 <head>
     <meta charset="UTF-8">
-    <title>Create/Edit Component</title>
+    <title>Create/Edit Version</title>
     <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 
 <body>
-    <h2>Create / Edit Component</h2>
+    <h2 th:text="|Create / Edit Version for ${version.ucdComponent.name}|">Create / Edit Version</h2>
     <div class="container">
-        <form th:object="${component}" th:action="@{/appcomponent}" method="post">
-            <input type="hidden" th:field="*{componenttype.type}" />
+
+        <!-- th:action="@{'/version/{component}(component=*{ucdComponent.name})}"-->
+        <form th:object="${version}" th:action="@{/component/{ucdComponent}/version(ucdComponent=*{ucdComponent.name})}"
+            method="post">
+            <input type="hidden" th:field="*{ucdComponent.name}" />
             <div class="form-group">
-                <label>Name</label>
-                <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
+                <label>Version</label>
+                <input type="text" th:field="*{directory}" class="form-control" placeholder="Version">
             </div>
 
             <button type="submit" class="btn btn-default">Submit</button>

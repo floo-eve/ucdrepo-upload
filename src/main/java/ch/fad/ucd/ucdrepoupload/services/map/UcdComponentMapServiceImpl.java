@@ -5,6 +5,8 @@ import java.util.*;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import ch.fad.ucd.ucdrepoupload.model.Version;
+import ch.fad.ucd.ucdrepoupload.model.ComponentType;
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 
@@ -26,6 +28,21 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
 
     }
 
+    public Version findVersionByName(UcdComponent component, String versionname) {
+
+        List<Version> versions = component.getVersions();
+        for (Version version : versions) {
+            if (version.getDirectory().equals(versionname)) {
+                return version;
+            }
+        }
+        return null; // --> @todo is this correct?
+    }
+
+    public String findComponentTypeDirectory(ComponentType type) {
+        return type.getType();
+    }
+
     public UcdComponent save(UcdComponent object) {
 
         if (object != null) {
@@ -42,14 +59,42 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
         return object;
     }
 
-    @Override
-    public void deleteById(String id) {
-        map.remove(id);
+    public Version saveVersion(Version version) {
+        if (version != null) {
+            if (version.getDirectory() == null) {
+                // object.setId(getNextId());
+                throw new RuntimeException("Version Name cannot be null");
+            }
+
+            UcdComponent component = map.get(version.getUcdComponent().getName());
+            component.addVersion(version);
+
+        } else {
+            throw new RuntimeException("Object cannot be null");
+        }
+
+        return version;
+
     }
+
+    // @Override
+    // public void deleteById(String id) {
+    // map.remove(id);
+    // }
 
     @Override
     public void delete(UcdComponent object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
+    }
+
+    /**
+     * 
+     */
+    public void deleteVersion(Version version) {
+
+        UcdComponent component = version.getUcdComponent();
+        component.removeVersion(version);
+
     }
 
     // private Long getNextId(){

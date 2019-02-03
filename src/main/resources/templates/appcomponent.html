@@ -7,42 +7,33 @@
 </head>
 
 <body>
-    <div class="container">
-        <ol class="breadcrumb">
-            <li><a href="#" th:href="${'/appcomponents'}">Home</a></li>
-        </ol>
-        <div class="row">
-            <h2>Component Details</h2>
-        </div>
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Name:</label>
-                <div class="col-sm-10">
-                    <p class="form-control-static" th:text="${component.name}">Component Name</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Directory:</label>
-                <div class="col-sm-10">
-                    <p class="form-control-static" th:text="${component.directory}">Component Directory</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Versions:</label>
-                <div class="col-sm-10">
-                    <div th:each="version : ${component.versions}">
-                        <p class="form-control-static" th:text="${version.directory}">VersionNumber</p>
-                    </div>
-                </div>
-            </div>
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="${'/appcomponents'}">Home</a></li>
+    </ol>
 
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <a href="#" class="btn btn-default" th:href="${'/appcomponent/edit/' + component.name}">Edit</a>
-                </div>
-            </div>
-        </form>
-    </div>
+    <h2 th:text="${component.name}">Component Details</h2>
+
+    <table id="appcomponents" class="table table-striped">
+        <tr>
+            <th>Version</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="version: ${component.versions}">
+            <td th:text="${version.directory}">Version</td>
+            <td><a class="btn btn-default" href="#" th:href="${'component/' + component.name + '/version/' + version.directory}">View</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/component/' + component.name + '/version/edit/' + version.directory}">Edit</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'/component/' + component.name +'/version/delete/' + version.directory}">Delete</a>
+            </td>
+        </tr>
+    </table>
+
+    <a th:href="${'/component/'+ component.name + '/version/new/'}" class="btn btn-default">New</a>
+
+
 
 </body>
 

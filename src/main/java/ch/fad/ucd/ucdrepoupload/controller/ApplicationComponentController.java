@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import ch.fad.ucd.ucdrepoupload.model.ComponentType;
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 
@@ -14,6 +15,9 @@ import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 public class ApplicationComponentController {
 
     private UcdComponentService ucdComponentService;
+
+    private ComponentType appType = new ComponentType("application");
+    // private ComponentType mwType = new ComponentType("mw");
 
     public ApplicationComponentController(UcdComponentService ucdComponentService) {
         this.ucdComponentService = ucdComponentService;
@@ -27,7 +31,8 @@ public class ApplicationComponentController {
      */
     @GetMapping("/appcomponent/new")
     public String newComponent(Model model) {
-        model.addAttribute("component", new UcdComponent());
+        UcdComponent newcomp = new UcdComponent("", ucdComponentService.findComponentTypeDirectory(appType), appType);
+        model.addAttribute("component", newcomp);
         return "appcomponentform";
 
     }
@@ -41,8 +46,10 @@ public class ApplicationComponentController {
      */
     @PostMapping("/appcomponent")
     public String createComponent(UcdComponent component, Model model) {
+        System.out.println("Create component: " + component.getName());
+        System.out.println("componenttype: " + component.getComponenttype().getType());
         ucdComponentService.save(component);
-        return "redirect:/appcomponent/" + component.getName();
+        return "redirect:/appcomponents";
     }
 
     /**

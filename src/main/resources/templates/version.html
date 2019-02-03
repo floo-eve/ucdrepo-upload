@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Version of a Components</title>
+</head>
+
+<body>
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="${'/appcomponents'}">Home</a></li>
+    </ol>
+
+    <h2 th:text="Version of ${version.uccomponent.name} Version: ${version.directory}">Versions of Component</h2>
+
+    <table id="files" class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Directory</th>
+        </tr>
+        <tr th:each="file : ${version.files}">
+            <td th:text="${file.name}">File Name</td>
+            <td th:text="${file.absolutePath}">File Directory</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

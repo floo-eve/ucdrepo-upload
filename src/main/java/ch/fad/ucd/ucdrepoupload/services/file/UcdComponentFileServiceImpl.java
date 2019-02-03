@@ -44,7 +44,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                         if (dirComponent.isDirectory()) {
 
                             UcdComponent ucdcomponent = new UcdComponent(dirComponent.getName(),
-                                    dirComponent.getAbsolutePath(), new ComponentType(dirComponent.getParent()));
+                                    dirComponent.getParent(), new ComponentType(dirComponent.getParent()));
 
                             for (File version : dirComponent.listFiles()) {
                                 if (version.isDirectory()) {
@@ -77,35 +77,81 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return new HashSet<>(map.values());
     }
 
+    public String findComponentTypeDirectory(ComponentType type) {
+        return repoDir + "/" + type.getType();
+    }
+
+    public Version findVersionByName(UcdComponent component, String versionname) {
+
+        List<Version> versions = component.getVersions();
+        for (Version version : versions) {
+            if (version.getDirectory().equals(versionname)) {
+                return version;
+            }
+        }
+        return null; // --> @todo is this correct?
+    }
+
     public UcdComponent findById(String id) {
         return findByName(id);
 
     }
 
-    public UcdComponent save(UcdComponent object) {
+    public UcdComponent save(UcdComponent component) {
 
-        if (object != null) {
-            if (object.getName() == null) {
-                // object.setId(getNextId());
+        if (component != null) {
+            if (component.getName() == null) {
                 throw new RuntimeException("Object Name annot be null");
             }
 
-            map.put(object.getName(), object);
+            component.setParentDirectory(repoDir + "/" + component.getComponenttype().getType());
+            component.setDirectory(component.getParentDirectory() + "/" + component.getName());
+
+            // TODO save to filesystem
+            new File(component.getDirectory()).mkdirs();
+            map.put(component.getName(), component);
         } else {
             throw new RuntimeException("Object cannot be null");
         }
 
-        return object;
+        return component;
     }
 
-    @Override
-    public void deleteById(String id) {
-        map.remove(id);
+    public Version saveVersion(Version version) {
+        if (version != null) {
+            if (version.getDirectory() == null) {
+                // object.setId(getNextId());
+                throw new RuntimeException("Version Name cannot be null");
+            }
+
+            UcdComponent component = map.get(version.getUcdComponent().getName());
+            component.addVersion(version);
+            // TODO save to filesystem
+
+        } else {
+            throw new RuntimeException("Object cannot be null");
+        }
+
+        return version;
+
     }
+
+    // @Override
+    // public void deleteById(String id) {
+    // map.remove(id);
+    // }
 
     @Override
     public void delete(UcdComponent object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
+    }
+
+    @Override
+    public void deleteVersion(Version version) {
+
+        UcdComponent component = version.getUcdComponent();
+        component.removeVersion(version);
+
     }
 
     // private Long getNextId(){

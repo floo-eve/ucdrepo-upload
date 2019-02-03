@@ -19,7 +19,7 @@
         </tr>
         <tr th:each="component : ${components}">
             <td th:text="${component.name}">Component Name</td>
-            <td th:text="${component.directory}">Component Directory</td>
+            <td th:text="${component.parentDirectory +'/' +component.name}">Component Directory</td>
             <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/' + component.name}">View</a> </td>
             <td><a class="btn btn-default" href="#" th:href="${'/appcomponent/edit/' + component.name}">Edit</a>
             </td>
