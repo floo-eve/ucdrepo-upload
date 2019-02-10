@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ComponentController
  */
+@Slf4j
 @Controller
 public class ComponentController {
 
@@ -29,6 +31,7 @@ public class ComponentController {
     public String newComponent(@PathVariable String type, Model model) {
         UcdComponent newcomp = new UcdComponent("", ucdComponentService.findComponentTypeDirectory(type), type);
         model.addAttribute("component", newcomp);
+        log.debug("component new");
         return "componentform";
 
     }
@@ -75,6 +78,7 @@ public class ComponentController {
     public String getComponents(@PathVariable String type, Model model) {
         model.addAttribute("components", ucdComponentService.findAllByType(type));
         model.addAttribute("type", type);
+        log.debug("list components");
         return "components";
     }
 

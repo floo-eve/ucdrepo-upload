@@ -2,6 +2,11 @@ package ch.fad.ucd.ucdrepoupload.model;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UcdComponent {
 
     private String name;
@@ -29,58 +34,6 @@ public class UcdComponent {
 
     public void removeVersion(Version version) {
         versions.remove(version);
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the directory
-     */
-    public String getDirectory() {
-        return this.directory;
-    }
-
-    public String getParentDirectory() {
-        return this.parentDirectory;
-    }
-
-    public void setParentDirectory(String parentDirectory) {
-        this.parentDirectory = parentDirectory;
-    }
-
-    /**
-     * @param directory the directory to set
-     */
-    public void setDirectory(String directory) {
-        this.directory = directory;
-    }
-
-    public ArrayList<Version> getVersions() {
-        return this.versions;
-    }
-
-    public void setVersions(ArrayList<Version> versions) {
-        this.versions = versions;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
 }

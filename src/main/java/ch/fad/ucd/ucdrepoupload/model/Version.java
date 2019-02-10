@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Version
  */
+@Getter
+@Setter
 public class Version {
 
     private String directory;
@@ -33,30 +38,6 @@ public class Version {
 
     public boolean removeFile(File file) {
         return this.files.remove(file);
-    }
-
-    public String getDirectory() {
-        return this.directory;
-    }
-
-    public void setDirectory(String directory) {
-        this.directory = directory;
-    }
-
-    public List<File> getFiles() {
-        return this.files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
-
-    public UcdComponent getUcdComponent() {
-        return this.ucdComponent;
-    }
-
-    public void setUcdComponent(UcdComponent ucdComponent) {
-        this.ucdComponent = ucdComponent;
     }
 
     public Version directory(String directory) {
