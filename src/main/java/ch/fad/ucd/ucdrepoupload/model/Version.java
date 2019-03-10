@@ -7,12 +7,14 @@ import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Version
  */
 @Getter
 @Setter
+@Slf4j
 public class Version {
 
     private String directory;
@@ -20,9 +22,12 @@ public class Version {
     private UcdComponent ucdComponent;
 
     public Version() {
+        log.debug("create version with default method");
+        this.files = new ArrayList<File>();
     }
 
     public Version(String directory) {
+        log.debug("create version with directory");
         this.directory = directory;
         this.files = new ArrayList<File>();
     }

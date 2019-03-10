@@ -1,6 +1,12 @@
 package ch.fad.ucd.ucdrepoupload.services.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,10 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import ch.fad.ucd.ucdrepoupload.StorageException;
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.model.Version;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * File based Repo for UcdComponentService
@@ -19,13 +29,19 @@ import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
 @Profile("file")
 @Primary
 @Service
+@Slf4j
 public class UcdComponentFileServiceImpl implements UcdComponentService {
 
     protected Map<String, UcdComponent> map = new HashMap<>();
     @Value("${file.upload.dir}")
     public String repoDir = "/home/floo/ucdrepo";
 
+    private Path rootLocation;
+
     public UcdComponentFileServiceImpl() {
+
+        this.rootLocation = Paths.get(repoDir);
+        log.debug("Root Location is: " + repoDir);
 
         initialize();
     }
@@ -39,7 +55,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
             File[] files = f.listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
-                    System.out.print("directory: " + file.getCanonicalPath());
+                    log.debug("directory: " + file.getCanonicalPath());
                     for (File dirComponent : file.listFiles()) {
                         if (dirComponent.isDirectory()) {
 
@@ -96,10 +112,47 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         List<Version> versions = component.getVersions();
         for (Version version : versions) {
             if (version.getDirectory().equals(versionname)) {
+                log.debug("find all Files from " + version.getDirectory());
+
+                if (version.getFiles().size() == 0) {
+                    // Try to load Files
+                    // Find the absolute path of the version and load Files
+                    String path = version.getUcdComponent().getDirectory() + "/" + version.getDirectory();
+                    log.debug(version.getUcdComponent().getDirectory());
+                    File versiondir = new File(path);
+
+                    addAllFilesToVersion(versiondir, version);
+                    // File[] files = f.listFiles();
+
+                    // if (files != null) {
+                    // for (File file : files) {
+                    // // if (file.isDirectory()) --> get all child files
+                    // version.addFile(file);
+                    // }
+                    // }
+
+                }
                 return version;
             }
         }
         return null; // --> @todo is this correct?
+    }
+
+    public static void addAllFilesToVersion(File dir, Version version) {
+        try {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    log.debug("directory:" + file.getCanonicalPath());
+                    addAllFilesToVersion(file, version);
+                } else {
+                    log.debug("     file:" + file.getCanonicalPath());
+                    version.addFile(file);
+                }
+            }
+        } catch (IOException e) {
+            log.error("error in traversing files", e);
+        }
     }
 
     public UcdComponent findById(String id) {
@@ -117,7 +170,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
             component.setParentDirectory(repoDir + "/" + component.getType());
             component.setDirectory(component.getParentDirectory() + "/" + component.getName());
 
-            // TODO save to filesystem
+            // save to filesystem
             new File(component.getDirectory()).mkdirs();
             map.put(component.getName(), component);
         } else {
@@ -136,7 +189,9 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
             UcdComponent component = map.get(version.getUcdComponent().getName());
             component.addVersion(version);
-            // TODO save to filesystem
+            // save to filesystem
+            log.debug("save version: " + version.getDirectory());
+            new File(component.getDirectory() + '/' + version.getDirectory()).mkdirs();
 
         } else {
             throw new RuntimeException("Object cannot be null");
@@ -144,6 +199,32 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
         return version;
 
+    }
+
+    public Version saveVersion(Version version, MultipartFile file) {
+        saveVersion(version);
+
+        return version;
+    }
+
+    public void store(MultipartFile file) {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file " + filename);
+            }
+            if (filename.contains("..")) {
+                // This is a security check
+                throw new StorageException(
+                        "Cannot store file with relative path outside current directory " + filename);
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+
+                Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + filename, e);
+        }
     }
 
     // @Override

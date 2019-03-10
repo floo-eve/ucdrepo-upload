@@ -3,15 +3,18 @@ package ch.fad.ucd.ucdrepoupload.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.model.Version;
 import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * VersionController
  */
 @Controller
+@Slf4j
 public class VersionController {
 
     private UcdComponentService ucdComponentService;
@@ -44,14 +47,15 @@ public class VersionController {
      * @return
      */
     @PostMapping("/component/{type}/{componentname}/version")
-    public String createVersion(@PathVariable String type, Version version, Model model) {
+    public String createVersion(@PathVariable String type, @RequestParam("file") MultipartFile file, Version version,
+            Model model) {
 
-        System.out.println("directory" + version.getDirectory());
-        System.out.println(version.getUcdComponent().getName());
-        System.out.println("----");
+        log.debug("new directory: " + version.getDirectory());
+        log.debug(version.getUcdComponent().getName());
+        log.debug("file to upload: " + file.getOriginalFilename());
+        log.debug("----");
 
         ucdComponentService.saveVersion(version);
-        System.out.println();
 
         return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
 
