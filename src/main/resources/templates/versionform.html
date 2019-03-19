@@ -5,7 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Create/Edit Version</title>
-    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!--link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"-->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -13,18 +16,28 @@
     <div class="container">
 
         <!-- th:action="@{'/version/{component}(component=*{ucdComponent.name})}"-->
-        <form th:object="${version}" th:action="@{/component/{type}/{component}/version(type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
-            method="post">
+        <form th:object="${version}"
+            th:action="@{/component/{type}/{component}/version(type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
+            method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{ucdComponent.name}" />
             <div class="form-group">
                 <label>Version</label>
                 <input type="text" th:field="*{directory}" class="form-control" placeholder="Version">
             </div>
 
-            <button type="submit" class="btn btn-default">Submit</button>
+            <div class="form-group">
+                <label>File to upload (single file or a zip file, that will be extracted)</label>
+                <input type="file" name="file" />
+
+            </div>
+
+
+
+            <button type=" submit" class="btn btn-default">Submit</button>
         </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 </body>

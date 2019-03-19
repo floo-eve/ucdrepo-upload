@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${type})}">
 
 <head>
     <meta charset="UTF-8" />
@@ -24,7 +24,8 @@
             </td>
             <td><a class="btn btn-default" href="#" th:href="${'/component/'+ type +'/edit/' + component.name}">Edit</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'/component/' + type +'/delete/' + component.name}">Delete</a>
+            <td><a class="btn btn-default" href="#"
+                    th:href="${'/component/' + type +'/delete/' + component.name}">Delete</a>
             </td>
         </tr>
     </table>

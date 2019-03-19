@@ -55,7 +55,11 @@ public class VersionController {
         log.debug("file to upload: " + file.getOriginalFilename());
         log.debug("----");
 
-        ucdComponentService.saveVersion(version);
+        // TODO check if version allready exists
+        if (version.getDirectory().equals("")) {
+            return "versionform";
+        }
+        ucdComponentService.saveVersion(version, file);
 
         return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
 

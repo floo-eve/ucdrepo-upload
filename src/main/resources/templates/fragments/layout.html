@@ -39,7 +39,8 @@
             <div class="navbar-collapse collapse" id="main-navbar">
                 <ul class="nav navbar-nav navbar-right">
 
-                    <li th:fragment="menuItem (path,active,title,glyph,text)" class="active" th:class="${active==menu ? 'active' : ''}">
+                    <li th:fragment="menuItem (path,active,title,glyph,text)" class="active"
+                        th:class="${active==menu ? 'active' : ''}">
                         <a th:href="@{__${path}__}" th:title="${title}">
                             <span th:class="'glyphicon  glyphicon-'+${glyph}" class="glyphicon glyphicon-home"
                                 aria-hidden="true"></span>
@@ -52,12 +53,14 @@
                         <span>Home</span>
                     </li>
 
-                    <li th:replace="::menuItem ('/component/application/list','appcomponents','Application Components','th-list','App Components')">
+                    <li
+                        th:replace="::menuItem ('/component/application/list','application','Application Components','th-list','App Components')">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         <span>Application Components</span>
                     </li>
 
-                    <li th:replace="::menuItem ('/component/mw/list','mwcomponents','Middleware Components','search','Mw Components')">
+                    <li
+                        th:replace="::menuItem ('/component/mw/list','mw','Middleware Components','search','Mw Components')">
                         <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                         <span>Middleware Components</span>
                     </li>
@@ -78,13 +81,13 @@
 
             <br />
             <br />
-            <div class="container">
+            <!--div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <img src="../static/resources/images/spring-pivotal-logo.png" th:src="@{/resources/images/spring-pivotal-logo.png}"
-                            alt="Sponsored by Pivotal" /></div>
+                        <img src="../static/resources/images/spring-pivotal-logo.png"
+                            th:src="@{/resources/images/spring-pivotal-logo.png}" alt="Sponsored by Pivotal" /></div>
                 </div>
-            </div>
+            </div-->
         </div>
     </div>
 

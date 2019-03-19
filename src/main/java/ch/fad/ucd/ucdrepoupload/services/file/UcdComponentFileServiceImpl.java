@@ -47,7 +47,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
     }
 
     private void initialize() {
-        System.out.println("initialize File Tree");
+        System.out.println("initialize File Tree with all components in mw and application");
         try {
             System.out.println("File Directory: " + repoDir);
             File f = new File(repoDir); // current directory
@@ -62,14 +62,22 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                             UcdComponent ucdcomponent = new UcdComponent(dirComponent.getName(),
                                     dirComponent.getParent(), dirComponent.getParentFile().getName());
 
-                            for (File version : dirComponent.listFiles()) {
-                                if (version.isDirectory()) {
-                                    // TODO Add Files to Version
-                                    File[] filesFromVersion = version.listFiles();
-                                    Version dirVersion = new Version(version.getName());
-                                    ucdcomponent.addVersion(dirVersion);
-                                }
-                            }
+                            // for (File version : dirComponent.listFiles()) {
+                            // if (version.isDirectory()) {
+                            // File[] filesFromVersion = version.listFiles();
+                            // Version dirVersion = new Version(version.getName());
+                            // ucdcomponent.addVersion(dirVersion);
+                            // }
+                            // }
+
+                            // // Sort files by Versionnumbers
+                            // List<Versions> files = ucdcomponent.getVersions();
+                            // files.sort(Comparator.comparing(File::getName));
+
+                            // for (File file : files) {
+                            // log.debug(file.getName());
+
+                            // }
 
                             map.put(ucdcomponent.getName(), ucdcomponent);
 
@@ -122,16 +130,9 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                     File versiondir = new File(path);
 
                     addAllFilesToVersion(versiondir, version);
-                    // File[] files = f.listFiles();
-
-                    // if (files != null) {
-                    // for (File file : files) {
-                    // // if (file.isDirectory()) --> get all child files
-                    // version.addFile(file);
-                    // }
-                    // }
 
                 }
+
                 return version;
             }
         }
@@ -204,10 +205,13 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
     public Version saveVersion(Version version, MultipartFile file) {
         saveVersion(version);
 
+        storeFiletoVersion(version, file);
+
         return version;
     }
 
-    public void store(MultipartFile file) {
+    public void storeFiletoVersion(Version version, MultipartFile file) {
+        log.debug("storefiletoVersion");
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
@@ -219,8 +223,13 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                         "Cannot store file with relative path outside current directory " + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
-
-                Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+                log.debug("Copy 1 file to " + version.getDirectory());
+                // Files.copy(inputStream,
+                // this.rootLocation.resolve(version.getDirectory()),StandardCopyOption.REPLACE_EXISTING);
+                Path path = Paths.get(version.getUcdComponent().getDirectory(), version.getDirectory(),
+                        file.getOriginalFilename());
+                log.debug("copy 1 file to " + path.toString());
+                Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
@@ -260,6 +269,25 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
     @Override
     public UcdComponent findByName(String name) {
-        return map.get(name);
+        UcdComponent component = map.get(name);
+
+        Path path = Paths.get(component.getParentDirectory(), component.getName());
+        File dirComponent = path.toFile();
+
+        ArrayList<Version> versions = new ArrayList<Version>();
+
+        for (File fileVersion : dirComponent.listFiles()) {
+            if (fileVersion.isDirectory()) {
+
+                Version version = new Version(fileVersion.getName(), component);
+                versions.add(version);
+            }
+        }
+
+        // versions.sort(Collections.reverseOrder(Comparator.comparing(Version::getDirectory)));
+        versions.sort(Collections.reverseOrder(null));
+
+        component.setVersions(versions);
+        return component;
     }
 }

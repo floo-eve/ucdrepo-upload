@@ -1,6 +1,9 @@
 package ch.fad.ucd.ucdrepoupload.services;
 
 import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
 import ch.fad.ucd.ucdrepoupload.model.Version;
 
@@ -26,6 +29,8 @@ public interface UcdComponentService {
     public Version findVersionByName(UcdComponent component, String versionname);
 
     public Version saveVersion(Version version);
+
+    public Version saveVersion(Version version, MultipartFile file);
 
     public String findComponentTypeDirectory(String type);
 

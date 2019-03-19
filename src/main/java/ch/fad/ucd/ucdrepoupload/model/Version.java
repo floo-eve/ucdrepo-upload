@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Slf4j
-public class Version {
+public class Version implements Comparable<Version> {
 
     private String directory;
     private List<File> files;
@@ -35,6 +35,13 @@ public class Version {
     public Version(String directory, List<File> files) {
         this.directory = directory;
         this.files = files;
+    }
+
+    public Version(String directory, UcdComponent ucdComponent) {
+        log.debug("create version with dir and component params");
+        this.directory = directory;
+        this.ucdComponent = ucdComponent;
+        this.files = new ArrayList<File>();
     }
 
     public void addFile(File file) {
@@ -80,6 +87,24 @@ public class Version {
     @Override
     public String toString() {
         return "{" + " directory='" + getDirectory() + "'" + "'" + ", ucdComponent='" + getUcdComponent() + "'" + "}";
+    }
+
+    @Override
+    public int compareTo(Version that) {
+        if (that == null)
+            return 1;
+        String[] thisParts = this.getDirectory().split("\\.");
+        String[] thatParts = that.getDirectory().split("\\.");
+        int length = Math.max(thisParts.length, thatParts.length);
+        for (int i = 0; i < length; i++) {
+            int thisPart = i < thisParts.length ? Integer.parseInt(thisParts[i]) : 0;
+            int thatPart = i < thatParts.length ? Integer.parseInt(thatParts[i]) : 0;
+            if (thisPart < thatPart)
+                return -1;
+            if (thisPart > thatPart)
+                return 1;
+        }
+        return 0;
     }
 
 }

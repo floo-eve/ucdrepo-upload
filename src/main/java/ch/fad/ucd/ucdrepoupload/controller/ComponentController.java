@@ -1,5 +1,10 @@
 package ch.fad.ucd.ucdrepoupload.controller;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +69,10 @@ public class ComponentController {
         if (component == null) {
             component = new UcdComponent();
         }
+
+        // //Sort Versions
+        // component.getVersions().sort(Comparator.comparing(UcdComponent::getName));
+        log.debug("show component");
         model.addAttribute("component", component);
         return "component";
     }
@@ -76,7 +85,10 @@ public class ComponentController {
      */
     @GetMapping("/component/{type}/list")
     public String getComponents(@PathVariable String type, Model model) {
-        model.addAttribute("components", ucdComponentService.findAllByType(type));
+        List<UcdComponent> list = new ArrayList<UcdComponent>(ucdComponentService.findAllByType(type));
+        list.sort(Comparator.comparing(UcdComponent::getName));
+
+        model.addAttribute("components", list);
         model.addAttribute("type", type);
         log.debug("list components");
         return "components";

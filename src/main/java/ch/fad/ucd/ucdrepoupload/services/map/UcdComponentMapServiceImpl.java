@@ -15,7 +15,7 @@ import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
  */
 @Profile("map")
 @Service
-public class UcdComponentMapServiceImpl implements UcdComponentService {
+public class UcdComponentMapServiceImpl { // implements UcdComponentService {
 
     protected Map<String, UcdComponent> map = new HashMap<>();
 
@@ -92,7 +92,6 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
     // map.remove(id);
     // }
 
-    @Override
     public void delete(UcdComponent object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
     }
@@ -120,7 +119,6 @@ public class UcdComponentMapServiceImpl implements UcdComponentService {
     // return nextId;
     // }
 
-    @Override
     public UcdComponent findByName(String name) {
         return map.get(name);
     }
