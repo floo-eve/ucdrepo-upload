@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload;
+package ch.set.ucd.ucd4u;
 
 public class StorageException extends RuntimeException {
 

@@ -19,7 +19,7 @@
 		<webjars-jquery.version>2.2.4</webjars-jquery.version>
 		<wro4j.version>1.8.0</wro4j.version>
 		<!-- The main class to start by executing "java -jar" -->
-		<start-class>ch.fad.ucd.ucdrepoupload.UcdrepoUploadApplication</start-class>
+		<start-class>ch.set.ucd.ucd4u.UcdrepoUploadApplication</start-class>
 	</properties>
 	<packaging>war</packaging>
 	<dependencies>

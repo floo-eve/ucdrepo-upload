@@ -1,11 +1,11 @@
-package ch.fad.ucd.ucdrepoupload.bootstrap;
+package ch.set.ucd.ucd4u.bootstrap;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
-import ch.fad.ucd.ucdrepoupload.model.Version;
-import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import ch.set.ucd.ucd4u.model.UcdComponent;
+import ch.set.ucd.ucd4u.model.Version;
+import ch.set.ucd.ucd4u.services.UcdComponentService;
 
 /**
  * Create some Data

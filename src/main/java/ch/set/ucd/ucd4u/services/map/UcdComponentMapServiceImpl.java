@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload.services.map;
+package ch.set.ucd.ucd4u.services.map;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import ch.fad.ucd.ucdrepoupload.model.Version;
-import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
-import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import ch.set.ucd.ucd4u.model.Version;
+import ch.set.ucd.ucd4u.model.UcdComponent;
+import ch.set.ucd.ucd4u.services.UcdComponentService;
 
 /**
  * Map implementation for UcdComponentService

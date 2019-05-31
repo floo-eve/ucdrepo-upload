@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload.services.file;
+package ch.set.ucd.ucd4u.services.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.fad.ucd.ucdrepoupload.StorageException;
-import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
-import ch.fad.ucd.ucdrepoupload.model.Version;
-import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import ch.set.ucd.ucd4u.StorageException;
+import ch.set.ucd.ucd4u.model.UcdComponent;
+import ch.set.ucd.ucd4u.model.Version;
+import ch.set.ucd.ucd4u.services.UcdComponentService;
 import lombok.extern.slf4j.Slf4j;
 
 /**

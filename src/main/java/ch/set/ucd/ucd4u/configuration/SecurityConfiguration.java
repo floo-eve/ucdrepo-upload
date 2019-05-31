@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload.configuration;
+package ch.set.ucd.ucd4u.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

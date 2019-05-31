@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload;
+package ch.set.ucd.ucd4u;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

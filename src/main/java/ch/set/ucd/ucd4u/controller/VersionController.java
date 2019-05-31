@@ -1,13 +1,13 @@
-package ch.fad.ucd.ucdrepoupload.controller;
+package ch.set.ucd.ucd4u.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.fad.ucd.ucdrepoupload.model.UcdComponent;
-import ch.fad.ucd.ucdrepoupload.model.Version;
-import ch.fad.ucd.ucdrepoupload.services.UcdComponentService;
+import ch.set.ucd.ucd4u.model.UcdComponent;
+import ch.set.ucd.ucd4u.model.Version;
+import ch.set.ucd.ucd4u.services.UcdComponentService;
 import lombok.extern.slf4j.Slf4j;
 
 /**

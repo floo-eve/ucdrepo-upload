@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload.services;
+package ch.set.ucd.ucd4u.services;
 
 import java.util.Set;
 

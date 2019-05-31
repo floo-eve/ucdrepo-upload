@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload;
+package ch.set.ucd.ucd4u;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,4 +14,3 @@ public class UcdrepoUploadApplicationTests {
 	}
 
 }
-

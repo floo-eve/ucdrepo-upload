@@ -1,4 +1,4 @@
-package ch.fad.ucd.ucdrepoupload.model;
+package ch.set.ucd.ucd4u.model;
 
 import java.io.File;
 import java.util.ArrayList;
