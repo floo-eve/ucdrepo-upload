@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.type})}">
 
 <head>
     <meta charset="UTF-8" />
@@ -7,8 +8,14 @@
 </head>
 
 <body>
+
     <ol class="breadcrumb">
-        <li><a href="#" th:href="${'/components/'+ version.ucdComponent.type}">Home</a></li>
+        <li><a href="#" th:href="@{'/index'}">Home</a></li>
+        <li><a href="#" th:href="@{'/component/'+${version.ucdComponent.type} +'/list'}"
+                th:text="${version.ucdComponent.type}">Application</a>
+        </li>
+        <li><a href="#" th:href="@{'/component/'+${version.ucdComponent.type} +'/'+${version.ucdComponent.name}}"
+                th:text="${version.ucdComponent.name}">Cadi</a></li>
     </ol>
 
     <h2 th:text="|Version ${version.directory} of ${version.ucdComponent.name}|">Versions of Component</h2>

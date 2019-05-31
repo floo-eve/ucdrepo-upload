@@ -129,11 +129,14 @@ public class ComponentController {
     /**
      * Delete a component.
      * 
-     * @param component
+     * @param type component type
+     * @param name component name
      * @return
      */
-    @PostMapping("/component/{type}/delete/{name}")
-    public String deleteComponent(@PathVariable String type, UcdComponent component) {
+    @GetMapping("/component/{type}/delete/{name}")
+    public String deleteComponent(@PathVariable String type, @PathVariable String name) {
+        log.debug("delete component " + name);
+        UcdComponent component = ucdComponentService.findByName(name);
         ucdComponentService.delete(component);
         return "redirect:/component/" + type + "/list";
     }

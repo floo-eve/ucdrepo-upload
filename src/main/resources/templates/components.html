@@ -22,14 +22,13 @@
             <td th:text="${component.directory}">Component Directory</td>
             <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'/component/'+ type +'/edit/' + component.name}">Edit</a>
+            <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Edit</a>
             </td>
-            <td><a class="btn btn-default" href="#"
-                    th:href="${'/component/' + type +'/delete/' + component.name}">Delete</a>
+            <td><a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
             </td>
         </tr>
     </table>
-    <a th:href="${'/component/' + type +'/new'}" class="btn btn-default">New</a>
+    <a th:href="${'new'}" class="btn btn-default">New</a>
 
 
 </body>

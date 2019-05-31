@@ -59,6 +59,7 @@ public class VersionController {
         if (version.getDirectory().equals("")) {
             return "versionform";
         }
+
         ucdComponentService.saveVersion(version, file);
 
         return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
@@ -130,10 +131,16 @@ public class VersionController {
      * @param version
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/delete/{version}")
-    public String deleteVersion(@PathVariable String type, Version version) {
+    @GetMapping("/component/{type}/{componentname}/version/delete/{versionname}")
+    public String deleteVersion(@PathVariable String type, @PathVariable String componentname,
+            @PathVariable String versionname) {
+
+        log.debug(componentname + ": delete Version " + versionname);
+        UcdComponent component = ucdComponentService.findByName(componentname);
+
+        Version version = ucdComponentService.findVersionByName(component, versionname);
         ucdComponentService.deleteVersion(version);
-        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
+        return "redirect:/component/" + type + "/" + componentname;
     }
 
 }

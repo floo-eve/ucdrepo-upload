@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.type})}">
 
 
 <head>
@@ -26,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                <label>File to upload (single file or a zip file, that will be extracted)</label>
+                <label>File to upload</label>
                 <input type="file" name="file" />
 
             </div>

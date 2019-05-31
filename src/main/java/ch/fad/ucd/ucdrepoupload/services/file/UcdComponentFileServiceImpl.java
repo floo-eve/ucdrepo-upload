@@ -9,7 +9,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -33,14 +35,16 @@ import lombok.extern.slf4j.Slf4j;
 public class UcdComponentFileServiceImpl implements UcdComponentService {
 
     protected Map<String, UcdComponent> map = new HashMap<>();
-    @Value("${file.upload.dir}")
-    public String repoDir = "/home/floo/ucdrepo";
+    private String repoDir; // = "/home/floo/ucdrepo";
 
     private Path rootLocation;
 
-    public UcdComponentFileServiceImpl() {
+    @Autowired
+    public UcdComponentFileServiceImpl(@Value("${file.upload.dir}") final String repodir) {
 
-        this.rootLocation = Paths.get(repoDir);
+        this.repoDir = repodir;
+        this.rootLocation = Paths.get(this.repoDir);
+
         log.debug("Root Location is: " + repoDir);
 
         initialize();
@@ -205,7 +209,9 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
     public Version saveVersion(Version version, MultipartFile file) {
         saveVersion(version);
 
-        storeFiletoVersion(version, file);
+        if (file != null && !file.isEmpty()) {
+            storeFiletoVersion(version, file);
+        }
 
         return version;
     }
@@ -226,8 +232,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                 log.debug("Copy 1 file to " + version.getDirectory());
                 // Files.copy(inputStream,
                 // this.rootLocation.resolve(version.getDirectory()),StandardCopyOption.REPLACE_EXISTING);
-                Path path = Paths.get(version.getUcdComponent().getDirectory(), version.getDirectory(),
-                        file.getOriginalFilename());
+                Path path = Paths.get(version.getAbsoluteVersionPath(), file.getOriginalFilename());
                 log.debug("copy 1 file to " + path.toString());
                 Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
             }
@@ -241,33 +246,30 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
     // map.remove(id);
     // }
 
-    @Override
-    public void delete(UcdComponent object) {
-        map.entrySet().removeIf(entry -> entry.getValue().equals(object));
+    public void delete(UcdComponent component) {
+        map.entrySet().removeIf(entry -> entry.getValue().equals(component));
+
+        deleteFileDirectory(component.getDirectory());
     }
 
-    @Override
+    /**
+     * Delete a version from a component
+     */
     public void deleteVersion(Version version) {
 
         UcdComponent component = version.getUcdComponent();
         component.removeVersion(version);
 
+        log.debug("delete Version " + version.getAbsoluteVersionPath());
+        // Delete Version from Filesystem
+        deleteFileDirectory(version.getAbsoluteVersionPath());
     }
 
-    // private Long getNextId(){
-
-    // Long nextId = null;
-
-    // try {
-    // nextId = Collections.max(map.keySet()) + 1;
-    // } catch (NoSuchElementException e) {
-    // nextId = 1L;
-    // }
-
-    // return nextId;
-    // }
-
-    @Override
+    /**
+     * Find a component by name
+     * 
+     * @param name String
+     */
     public UcdComponent findByName(String name) {
         UcdComponent component = map.get(name);
 
@@ -289,5 +291,17 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
         component.setVersions(versions);
         return component;
+    }
+
+    public void deleteFileDirectory(String directory) {
+
+        log.debug("delete path " + directory);
+        try {
+            FileUtils.deleteDirectory(new File(directory));
+        } catch (IOException e) {
+            log.error("Deletion wasn't successful");
+            log.error("Errormessage: ", e);
+
+        }
     }
 }

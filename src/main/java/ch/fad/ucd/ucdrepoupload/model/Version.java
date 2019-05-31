@@ -27,7 +27,7 @@ public class Version implements Comparable<Version> {
     }
 
     public Version(String directory) {
-        log.debug("create version with directory");
+        log.debug("create version with directory " + directory);
         this.directory = directory;
         this.files = new ArrayList<File>();
     }
@@ -38,7 +38,7 @@ public class Version implements Comparable<Version> {
     }
 
     public Version(String directory, UcdComponent ucdComponent) {
-        log.debug("create version with dir and component params");
+        log.debug("create version with dir " + directory + " and component params");
         this.directory = directory;
         this.ucdComponent = ucdComponent;
         this.files = new ArrayList<File>();
@@ -60,6 +60,14 @@ public class Version implements Comparable<Version> {
     public Version file(List<File> files) {
         this.files = files;
         return this;
+    }
+
+    public String getAbsoluteVersionPath() {
+        if (this.ucdComponent != null) {
+            return ucdComponent.getDirectory() + "/" + this.directory;
+        }
+
+        return this.directory;
     }
 
     public Version ucdComponent(UcdComponent ucdComponent) {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
     <meta charset="UTF-8" />
@@ -8,69 +9,50 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" th:href="@{/}"><span></span></a>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-                    <span class="sr-only">
-                        <os-p>Toggle navigation</os-p>
-                    </span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse" id="main-navbar">
-                <ul class="nav navbar-nav navbar-right">
 
-                    <li th:fragment="menuItem (path,active,title,glyph,text)" class="active" th:class="${active==menu ? 'active' : ''}">
-                        <a th:href="@{__${path}__}" th:title="${title}">
-                            <span th:class="'glyphicon  glyphicon-'+${glyph}" class="glyphicon glyphicon-home"
-                                aria-hidden="true"></span>
-                            <span th:text="${text}">Template</span>
-                        </a>
-                    </li>
+    <div class="container">
 
-                    <li th:replace="::menuItem ('/','home','home page','home','Home')">
-                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                        <span>Home</span>
-                    </li>
+        <div class="row" style="margin-top:20px">
+            <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+                <form th:action="@{/login}" method="post">
+                    <fieldset>
+                        <h1>Please Sign In</h1>
 
-                    <li th:replace="::menuItem ('/appcomponents','appcomponents','Application Components','th-list','App Components')">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        <span>Application Components</span>
-                    </li>
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                Invalid username and password.
+                            </div>
+                        </div>
+                        <div th:if="${param.logout}">
+                            <div class="alert alert-info">
+                                You have been logged out.
+                            </div>
+                        </div>
 
-                    <li th:replace="::menuItem ('/appcomponents','mwcomponents','Middleware Components','search','Mw Components')">
-                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                        <span>Middleware Components</span>
-                    </li>
+                        <div class="form-group">
+                            <input type="text" name="username" id="username" class="form-control input-lg"
+                                placeholder="UserName" required="true" autofocus="true" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" id="password" class="form-control input-lg"
+                                placeholder="Password" required="true" />
+                        </div>
 
-                    <li th:replace="::menuItem ('/oups','error','trigger a RuntimeException to see how it is handled','warning-sign','Error')">
-                        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                        <span>Error</span>
-                    </li>
-
-                </ul>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <input type="submit" class="btn btn-lg btn-primary btn-block" value="Sign In" />
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
         </div>
-    </nav>
 
-
-
-
-    <div th:if="${param.error}">
-        Invalid username and password.
     </div>
-    <div th:if="${param.logout}">
-        You have been logged out.
-    </div>
-    <form th:action="@{/login}" method="post">
-        <div><label> User Name : <input type="text" name="username" /> </label></div>
-        <div><label> Password: <input type="password" name="password" /> </label></div>
-        <div><input type="submit" value="Sign In" /></div>
-    </form>
+
+
 
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
