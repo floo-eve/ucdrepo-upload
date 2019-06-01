@@ -14,7 +14,7 @@
             <th>Name</th>
             <th>Directory</th>
             <th>View</th>
-            <th>Edit</th>
+            <th>Rename</th>
             <th>Delete</th>
         </tr>
         <tr th:each="component : ${components}">
@@ -22,7 +22,7 @@
             <td th:text="${component.directory}">Component Directory</td>
             <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Edit</a>
+            <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Rename</a>
             </td>
             <td><a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
             </td>

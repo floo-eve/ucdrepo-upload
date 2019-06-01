@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${type})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rename Component</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <!--<link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">-->
+</head>
+
+<body>
+    <div class="container">
+        <h2>Rename Component</h2>
+    </div>
+    <div class="alert alert-danger" th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+    <div class=" container">
+        <form th:object="${component}" th:action="@{/component/{type}/rename/{name}(type=*{type}, name=*{name})}"
+            method="post">
+            <input type="hidden" th:field="*{type}" />
+            <div class="form-group">
+                <label>Old Name</label>
+                <input type="text" name="oldname" disabled th:value="*{name}" value="cadi" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>New Name</label>
+                <input type="text" th:field="*{name}" value="cadi" autofocus class="form-control" placeholder="Name" />
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+
+
+</body>
+
+</html>

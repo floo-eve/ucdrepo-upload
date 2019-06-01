@@ -36,4 +36,9 @@ public class UcdComponent {
         versions.remove(version);
     }
 
+    public void setName(String name) {
+        this.name = name;
+        this.directory = this.parentDirectory + "/" + name;
+    }
+
 }

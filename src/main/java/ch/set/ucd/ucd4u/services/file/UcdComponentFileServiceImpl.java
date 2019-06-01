@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.set.ucd.ucd4u.StorageException;
+import ch.set.ucd.ucd4u.exception.ComponentExistsException;
 import ch.set.ucd.ucd4u.model.UcdComponent;
 import ch.set.ucd.ucd4u.model.Version;
 import ch.set.ucd.ucd4u.services.UcdComponentService;
@@ -169,7 +172,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
         if (component != null) {
             if (component.getName() == null) {
-                throw new RuntimeException("Object Name annot be null");
+                throw new RuntimeException("Object Name cannot be null");
             }
 
             component.setParentDirectory(repoDir + "/" + component.getType());
@@ -183,6 +186,34 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         }
 
         return component;
+    }
+
+    /**
+     * Rename the component and move directory structure
+     * 
+     * @param oldName   old directory name
+     * @param component UcdComponent with the new directory
+     */
+    public UcdComponent rename(String oldName, UcdComponent component) throws ComponentExistsException {
+        File dirOld = new File(component.getParentDirectory() + "/" + oldName);
+        File dirNew = new File(component.getDirectory());
+        log.debug("rename component " + oldName + "  to " + component.getName());
+        try {
+            FileUtils.moveDirectory(dirOld, dirNew);
+            map.remove(oldName);
+            map.put(component.getName(), component);
+
+        } catch (FileExistsException e) {
+            log.error("Renaming failed, because directory already exists", e);
+            throw new ComponentExistsException("Directory " + component.getDirectory());
+        } catch (IOException e) {
+            log.error("Rename Component not successful");
+            log.error("Error rename component " + oldName, e);
+
+        }
+
+        return component;
+
     }
 
     public Version saveVersion(Version version) {

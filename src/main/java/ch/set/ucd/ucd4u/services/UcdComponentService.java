@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.set.ucd.ucd4u.exception.ComponentExistsException;
 import ch.set.ucd.ucd4u.model.UcdComponent;
 import ch.set.ucd.ucd4u.model.Version;
 
@@ -17,6 +18,8 @@ public interface UcdComponentService {
     public Set<UcdComponent> findAll();
 
     public UcdComponent save(UcdComponent component);
+
+    public UcdComponent rename(String oldName, UcdComponent component) throws ComponentExistsException;
 
     public void delete(UcdComponent object);
 

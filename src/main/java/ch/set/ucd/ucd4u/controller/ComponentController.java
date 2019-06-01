@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import ch.set.ucd.ucd4u.exception.ComponentExistsException;
 import ch.set.ucd.ucd4u.model.UcdComponent;
 import ch.set.ucd.ucd4u.services.UcdComponentService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class ComponentController {
     }
 
     /**
-     * Create a new component
+     * Create/Update a component
      * 
      * @param project
      * @param model
@@ -111,7 +112,7 @@ public class ComponentController {
 
         }
         model.addAttribute("component", component);
-        return "componentform";
+        return "componentformrename";
     }
 
     /**
@@ -124,6 +125,31 @@ public class ComponentController {
     public String updateComponent(@PathVariable String type, UcdComponent component) {
         ucdComponentService.save(component);
         return "redirect:/component/" + type + "/" + component.getName();
+    }
+
+    /**
+     * Rename a component.
+     * 
+     * @param component
+     * @return
+     */
+    @PostMapping("/component/{type}/rename/{oldname}")
+    public String updateComponent(@PathVariable String type, @PathVariable String oldname, @RequestParam String name,
+            Model model) {
+        log.debug("rename " + oldname + " to " + name);
+        UcdComponent component = ucdComponentService.findByName(oldname);
+        component.setName(name);
+
+        try {
+            component = ucdComponentService.rename(oldname, component);
+        } catch (ComponentExistsException e) {
+
+            model.addAttribute("error", "Component name " + name + " already exists");
+            component.setName(oldname);
+            model.addAttribute("component", component);
+            return "componentformrename";
+        }
+        return "redirect:/component/" + type + "/list";
     }
 
     /**

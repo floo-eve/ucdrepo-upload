@@ -19,6 +19,10 @@
 
     <link rel="stylesheet" th:href="@{/resources/css/ucdrepo-upload.css}" />
 
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
 </head>
 
 <body>
@@ -55,12 +59,12 @@
 
                     <li
                         th:replace="::menuItem ('/component/application/list','application','Application Components','th-list','App Components')">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                         <span>Application Components</span>
                     </li>
 
                     <li
-                        th:replace="::menuItem ('/component/mw/list','mw','Middleware Components','search','Mw Components')">
+                        th:replace="::menuItem ('/component/mw/list','mw','Middleware Components','th-list','Mw Components')">
                         <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                         <span>Middleware Components</span>
                     </li>
@@ -90,10 +94,15 @@
             </div-->
         </div>
     </div>
+    <!-- Footer -->
+    <footer class="footer font-small bg-green">
 
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <!-- Copyright -->
+        <div class="container">© 2019 ucd4
+        </div>
+
+
+    </footer>
 
 </body>
 
