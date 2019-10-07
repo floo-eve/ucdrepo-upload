@@ -15,7 +15,11 @@
             <th>Directory</th>
             <th>View</th>
             <th>Rename</th>
-            <th>Delete</th>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+
+                <th>Delete</th>
+            </div>
+
         </tr>
         <tr th:each="component : ${components}">
             <td th:text="${component.name}">Component Name</td>
@@ -24,8 +28,13 @@
             </td>
             <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Rename</a>
             </td>
-            <td><a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
-            </td>
+
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <td>
+
+                    <a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
+                </td>
+            </div>
         </tr>
     </table>
     <a th:href="${'new'}" class="btn btn-default">New</a>

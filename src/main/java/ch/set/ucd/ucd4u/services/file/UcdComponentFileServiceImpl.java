@@ -152,6 +152,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
             for (File file : files) {
                 if (file.isDirectory()) {
                     log.debug("directory:" + file.getCanonicalPath());
+                    version.addFile(file);
                     addAllFilesToVersion(file, version);
                 } else {
                     log.debug("     file:" + file.getCanonicalPath());

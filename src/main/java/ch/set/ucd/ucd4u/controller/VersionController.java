@@ -108,7 +108,8 @@ public class VersionController {
             version.setUcdComponent(component);
         }
         model.addAttribute("version", version);
-        return "versionform";
+
+        return "versionformedit";
 
     }
 
