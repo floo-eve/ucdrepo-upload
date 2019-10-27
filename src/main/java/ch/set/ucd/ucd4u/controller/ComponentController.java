@@ -3,7 +3,6 @@ package ch.set.ucd.ucd4u.controller;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

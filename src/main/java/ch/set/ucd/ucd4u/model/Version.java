@@ -57,7 +57,7 @@ public class Version implements Comparable<Version> {
         return this;
     }
 
-    public Version file(List<File> files) {
+    public Version setFiles(List<File> files) {
         this.files = files;
         return this;
     }

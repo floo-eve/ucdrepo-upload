@@ -137,7 +137,6 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                     File versiondir = new File(path);
 
                     addAllFilesToVersion(versiondir, version);
-
                 }
 
                 return version;
@@ -155,7 +154,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                     version.addFile(file);
                     addAllFilesToVersion(file, version);
                 } else {
-                    log.debug("     file:" + file.getCanonicalPath());
+                    log.debug(" file:" + file.getCanonicalPath());
                     version.addFile(file);
                 }
             }
@@ -187,6 +186,34 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         }
 
         return component;
+    }
+
+    /**
+     * 
+     * @param newName new version name
+     * @param version existing version
+     * @throws ComponentExistsException
+     */
+    public Version changeVersionName(String newName, Version version) throws ComponentExistsException {
+        // File dirOld = new File()
+        log.debug("change Name from " + version.getDirectory() + " to " + newName);
+
+        File dirNew = new File(version.getUcdComponent().getDirectory() + File.separator + newName);
+        File dirOld = new File(version.getAbsoluteVersionPath());
+        try {
+            FileUtils.moveDirectory(dirOld, dirNew);
+            version.setDirectory(newName);
+            version.setFiles(new ArrayList<File>());
+
+        } catch (FileExistsException e) {
+            log.error("Renaming failed, because version directory already exists", e);
+            throw new ComponentExistsException("Directory " + newName);
+        } catch (IOException e) {
+            log.error("Rename version not successful");
+            log.error("Error rename version to " + newName, e);
+
+        }
+        return version;
     }
 
     /**
@@ -238,8 +265,8 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
     }
 
-    public Version saveVersion(Version version, MultipartFile file) {
-        saveVersion(version);
+    public Version addFileToVersion(Version version, MultipartFile file) {
+        // saveVersion(version);
 
         if (file != null && !file.isEmpty()) {
             storeFiletoVersion(version, file);
@@ -248,23 +275,62 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return version;
     }
 
-    public void storeFiletoVersion(Version version, MultipartFile file) {
-        log.debug("storefiletoVersion");
+    public Version addDirToVersion(Version version, String absolutePath) {
+        // todo save a new directory to a version
+        File dirNew = new File(absolutePath);
+        dirNew.mkdirs();
+        version.addFile(dirNew);
+        return version;
+    }
+
+    public Version addFileToVersion(Version version, String filePath, MultipartFile file) {
+        // saveVersion(version);
+
+        if (file != null && !file.isEmpty() && filePath != "") {
+            storeFiletoVersion(version, filePath, file);
+        }
+
+        return version;
+    }
+
+    /**
+     * Store a file to the root directory of the version
+     * 
+     * @param version
+     * @param file
+     */
+    private void storeFiletoVersion(Version version, MultipartFile file) {
+        storeFiletoVersion(version, version.getAbsoluteVersionPath(), file);
+    }
+
+    /**
+     * Store a file to an absolute Path in the version directory
+     * 
+     * @param version
+     * @param absoluteFilePath
+     * @param file
+     */
+    private void storeFiletoVersion(Version version, String absoluteFilePath, MultipartFile file) {
+        log.debug("storefiletoVersion to " + absoluteFilePath);
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
             }
-            if (filename.contains("..")) {
+            if (absoluteFilePath.contains("..") || filename.contains("..")) {
                 // This is a security check
                 throw new StorageException(
                         "Cannot store file with relative path outside current directory " + filename);
             }
+            if (!absoluteFilePath.startsWith(version.getAbsoluteVersionPath())) {
+                // If the new file is not within the version path abort
+                throw new StorageException("path is not within the version path, are you naughty?");
+            }
             try (InputStream inputStream = file.getInputStream()) {
-                log.debug("Copy 1 file to " + version.getDirectory());
+                log.debug("Copy 1 file to " + absoluteFilePath);
                 // Files.copy(inputStream,
                 // this.rootLocation.resolve(version.getDirectory()),StandardCopyOption.REPLACE_EXISTING);
-                Path path = Paths.get(version.getAbsoluteVersionPath(), file.getOriginalFilename());
+                Path path = Paths.get(absoluteFilePath, file.getOriginalFilename());
                 log.debug("copy 1 file to " + path.toString());
                 Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
             }
@@ -282,6 +348,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         map.entrySet().removeIf(entry -> entry.getValue().equals(component));
 
         deleteFileDirectory(component.getDirectory());
+
     }
 
     /**
@@ -325,15 +392,19 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return component;
     }
 
-    public void deleteFileDirectory(String directory) {
+    private void deleteFileDirectory(String directory) {
 
-        log.debug("delete path " + directory);
-        try {
-            FileUtils.deleteDirectory(new File(directory));
-        } catch (IOException e) {
-            log.error("Deletion wasn't successful");
-            log.error("Errormessage: ", e);
+        if (directory != File.separator) {
+            // only delete when it is not the root Directory
 
+            log.debug("delete path " + directory);
+            try {
+                FileUtils.deleteDirectory(new File(directory));
+            } catch (IOException e) {
+                log.error("Deletion wasn't successful");
+                log.error("Errormessage: ", e);
+
+            }
         }
     }
 }

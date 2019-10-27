@@ -1,10 +1,14 @@
 package ch.set.ucd.ucd4u.controller;
 
+import java.io.File;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.set.ucd.ucd4u.exception.ComponentExistsException;
 import ch.set.ucd.ucd4u.model.UcdComponent;
 import ch.set.ucd.ucd4u.model.Version;
 import ch.set.ucd.ucd4u.services.UcdComponentService;
@@ -60,9 +64,66 @@ public class VersionController {
             return "versionform";
         }
 
-        ucdComponentService.saveVersion(version, file);
+        ucdComponentService.saveVersion(version);
+        ucdComponentService.addFileToVersion(version, file);
 
         return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
+
+    }
+
+    /**
+     * Create a a new file in the version
+     * 
+     * @param versionname
+     * @param model
+     * @return
+     */
+    @PostMapping("/component/{type}/{componentname}/version/{versionname}/file")
+    public String addFileToVersion(@PathVariable String type, @RequestParam("file") MultipartFile file,
+            @PathVariable String componentname, @PathVariable String versionname,
+            @RequestParam("absoluteParentPath") String absoluteParentPath, Model model) {
+
+        UcdComponent component = ucdComponentService.findByName(componentname);
+
+        Version version = ucdComponentService.findVersionByName(component, versionname);
+
+        log.debug("new file in directory: " + version.getDirectory() + absoluteParentPath);
+        log.debug(version.getUcdComponent().getName());
+        log.debug("file to upload: " + file.getOriginalFilename());
+        log.debug("----");
+
+        ucdComponentService.addFileToVersion(version, absoluteParentPath, file);
+
+        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/edit/"
+                + version.getDirectory();
+
+    }
+
+    /**
+     * Create a a new directory in the version
+     * 
+     * @param version
+     * @param model
+     * @return
+     */
+    @PostMapping("/component/{type}/{componentname}/version/{versionname}/dir")
+    public String addDirToVersion(@PathVariable String type, @RequestParam("dirname") String dirname,
+            @PathVariable String componentname, @PathVariable String versionname,
+            @RequestParam("absoluteParentPath") String absoluteParentPath, Model model) {
+
+        log.debug("-------------------------------------------------------");
+        UcdComponent component = ucdComponentService.findByName(componentname);
+
+        Version version = ucdComponentService.findVersionByName(component, versionname);
+
+        log.debug("absoluteParentPath: " + absoluteParentPath);
+        log.debug(version.getUcdComponent().getName());
+        log.debug("----");
+
+        ucdComponentService.addDirToVersion(version, absoluteParentPath + File.separator + dirname);
+
+        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/edit/"
+                + version.getDirectory();
 
     }
 
@@ -114,16 +175,36 @@ public class VersionController {
     }
 
     /**
-     * Update a version.
+     * Change the version name.
      * 
      * @param version
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/{versionname}")
+    @PostMapping("/component/{type}/{componentname}/version/rename/{versionname}")
+    public String changeVersionName(@PathVariable String type, @PathVariable String componentname,
+            @PathVariable String versionname, @RequestParam("directory") String newName, Model model) {
+        log.debug("**** rename to " + newName);
 
-    public String updateVersion(@PathVariable String type, Version version) {
-        ucdComponentService.saveVersion(version);
-        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/";
+        UcdComponent component = ucdComponentService.findByName(componentname);
+        Version version = ucdComponentService.findVersionByName(component, versionname);
+
+        try {
+
+            version = ucdComponentService.changeVersionName(newName, version);
+
+        } catch (ComponentExistsException e) {
+
+            log.debug("error in renaming");
+            model.addAttribute("error", "Version name " + version.getDirectory() + " already exists");
+
+        }
+
+        // reload version, with new file structure
+        version = ucdComponentService.findVersionByName(component, newName);
+        model.addAttribute("version", version);
+
+        return "versionformedit";
+
     }
 
     /**

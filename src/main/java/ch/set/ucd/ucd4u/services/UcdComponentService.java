@@ -33,7 +33,13 @@ public interface UcdComponentService {
 
     public Version saveVersion(Version version);
 
-    public Version saveVersion(Version version, MultipartFile file);
+    public Version changeVersionName(String oldName, Version version) throws ComponentExistsException;
+
+    public Version addFileToVersion(Version version, MultipartFile file);
+
+    public Version addFileToVersion(Version version, String filePath, MultipartFile file);
+
+    public Version addDirToVersion(Version version, String dirPath);
 
     public String findComponentTypeDirectory(String type);
 
