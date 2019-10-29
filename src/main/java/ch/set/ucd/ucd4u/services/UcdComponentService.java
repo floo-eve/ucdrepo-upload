@@ -25,6 +25,8 @@ public interface UcdComponentService {
 
     public void deleteVersion(Version version);
 
+    public void deleteFile(Version version, String absoluteFilePath);
+
     // public void deleteById(ID id);
 
     public UcdComponent findByName(String name);

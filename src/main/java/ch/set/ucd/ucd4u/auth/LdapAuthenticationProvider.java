@@ -18,6 +18,7 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -55,7 +56,6 @@ public class LdapAuthenticationProvider implements AuthenticationProvider {
         final String password = credentials.toString();
 
         log.debug("User to authenticate: " + userId);
-        log.debug("password to authenticate: " + password);
 
         final Filter filter = new EqualsFilter("uid", userId);
         final boolean authenticated = ldapTemplate.authenticate("", filter.toString(), password);
@@ -90,23 +90,28 @@ public class LdapAuthenticationProvider implements AuthenticationProvider {
 
             ArrayList<LdapAuthority> listAuthorities = new ArrayList<LdapAuthority>();
 
-            if (groups.stream().anyMatch(str -> str.equals("ucd4uAdmin"))) {
+            if (groups.stream().anyMatch(str -> str.equals("ucd4u-admin"))) {
                 listAuthorities.add(new LdapAuthority("ROLE_ADMIN", authenticatedUser.getFulldn()));
                 authenticatedUser.addRole("ROLE_ADMIN");
-            } else if (groups.stream().anyMatch(str -> str.equals("ucd4uUser"))) {
+            } else if (groups.stream().anyMatch(str -> str.equals("ucd4u-user"))) {
                 listAuthorities.add(new LdapAuthority("ROLE_USER", authenticatedUser.getFulldn()));
                 authenticatedUser.addRole("ROLE_USER");
+            }
+
+            if (authenticatedUser.getRoles().size() == 0) {
+                log.debug("no matching role for user " + userId);
+                throw new InsufficientAuthenticationException("No roles for user");
             }
 
             log.debug("granted Roles: "
                     + listAuthorities.stream().map(Object::toString).collect(Collectors.joining(",")));
 
-            if (log.isDebugEnabled()) {
+            // if (log.isDebugEnabled()) {
 
-                for (String group : groups) {
-                    log.debug(group);
-                }
-            }
+            // for (String group : groups) {
+            // log.debug(group);
+            // }
+            // }
 
             return new UsernamePasswordAuthenticationToken(authenticatedUser, password, listAuthorities);
 

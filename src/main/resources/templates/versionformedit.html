@@ -98,12 +98,21 @@
                     <td th:text="${file.absolutePath}">File Directory</td>
                     <td>
 
-                        <div class="btn-group">
-                            <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addDir"
-                                th:class="'glyphicon  glyphicon-folder-close'"></a>
-                            <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addFile"
-                                th:class="'glyphicon glyphicon-file'"></a>
-                            <a href="#" th:class="'glyphicon glyphicon-remove'"></a>
+                        <div>
+                            <form
+                                th:action="@{/component/{type}/{component}/version/{versionnummer}/delete/file(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                                method="post">
+                                <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addDir"
+                                    th:class="'glyphicon  glyphicon-folder-close'"></a>
+                                <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addFile"
+                                    th:class="'glyphicon glyphicon-file'"></a>
+
+                                <input name="filepath" type="hidden" th:value="${file.absolutePath}" />
+                                <button type="submit" class="btn btn-default">
+
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </form>
                         </div>
                         <div id="addDir" class="collapse">
                             <form

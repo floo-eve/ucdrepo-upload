@@ -339,29 +339,57 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         }
     }
 
-    // @Override
-    // public void deleteById(String id) {
-    // map.remove(id);
-    // }
-
+    /**
+     * @param component component that will be deleted
+     */
     public void delete(UcdComponent component) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(component));
 
-        deleteFileDirectory(component.getDirectory());
+        try {
+            deleteFileDirectory(component.getDirectory());
+        } catch (IOException e) {
+            log.error("Error in deleting component " + component.getDirectory());
+        }
 
     }
 
     /**
      * Delete a version from a component
+     * 
+     * @param version
      */
     public void deleteVersion(Version version) {
 
         UcdComponent component = version.getUcdComponent();
-        component.removeVersion(version);
 
         log.debug("delete Version " + version.getAbsoluteVersionPath());
         // Delete Version from Filesystem
-        deleteFileDirectory(version.getAbsoluteVersionPath());
+        try {
+            deleteFileDirectory(version.getAbsoluteVersionPath());
+            component.removeVersion(version);
+
+        } catch (IOException e) {
+            log.error("Error in deleten Version " + version.getAbsoluteVersionPath());
+        }
+    }
+
+    /**
+     * Delete a file or a directory from the version
+     * 
+     * @param version
+     * @param absoluteFilePath
+     */
+    public void deleteFile(Version version, String absoluteFilePath) {
+        log.debug("delete File " + absoluteFilePath);
+
+        if (!absoluteFilePath.contains("..")) {
+            try {
+                deleteFileDirectory(absoluteFilePath);
+                version.removeFile(new File(absoluteFilePath));
+            } catch (IOException e) {
+                log.error("Error in deleting file in version");
+            }
+        }
     }
 
     /**
@@ -392,18 +420,19 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return component;
     }
 
-    private void deleteFileDirectory(String directory) {
+    private void deleteFileDirectory(String directory) throws IOException {
 
         if (directory != File.separator) {
             // only delete when it is not the root Directory
 
             log.debug("delete path " + directory);
-            try {
-                FileUtils.deleteDirectory(new File(directory));
-            } catch (IOException e) {
-                log.error("Deletion wasn't successful");
-                log.error("Errormessage: ", e);
 
+            File todelete = new File(directory);
+            if (todelete.isDirectory()) {
+                FileUtils.deleteDirectory(new File(directory));
+
+            } else {
+                FileUtils.deleteQuietly(todelete);
             }
         }
     }

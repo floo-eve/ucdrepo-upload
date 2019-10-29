@@ -100,6 +100,26 @@ public class VersionController {
     }
 
     /**
+     * Delete a file in the version (file or directory)
+     * 
+     * @param model
+     * @return
+     */
+    @PostMapping("/component/{type}/{componentname}/version/{versionname}/delete/file")
+    public String deleteFile(@PathVariable String type, @PathVariable String componentname,
+            @PathVariable String versionname, @RequestParam("filepath") String filepath, Model model) {
+
+        UcdComponent component = ucdComponentService.findByName(componentname);
+
+        Version version = ucdComponentService.findVersionByName(component, versionname);
+        ucdComponentService.deleteFile(version, filepath);
+        model.addAttribute("version", version);
+
+        return "versionformedit";
+
+    }
+
+    /**
      * Create a a new directory in the version
      * 
      * @param version
