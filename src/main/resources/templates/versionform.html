@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.type})}">
+    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.homeBase})}">
 
 
 <head>
@@ -13,12 +13,25 @@
 </head>
 
 <body>
-    <h2 th:text="|Create Version for ${version.ucdComponent.name}|">Create Version</h2>
     <div class="container">
+        <ol class="breadcrumb" th:object="${version.ucdComponent}">
+            <li><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            </li>
+            <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                    th:text='*{type}'>Component</a>
+            </li>
+            <li><a href="#"
+                    th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{homeBase},type=*{type}, component=*{name})}"
+                    th:text="*{name}">Testapp</a></li>
+        </ol>
+
+
+        <h2 th:text="|Create Version for ${version.ucdComponent.name}|">Create Version</h2>
 
         <!-- th:action="@{'/version/{component}(component=*{ucdComponent.name})}"-->
         <form th:object="${version}"
-            th:action="@{/component/{type}/{component}/version(type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
+            th:action="@{/{homeBase}/type/{type}/component/{component}/version(homeBase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
             method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{ucdComponent.name}" />
             <div class="form-group">

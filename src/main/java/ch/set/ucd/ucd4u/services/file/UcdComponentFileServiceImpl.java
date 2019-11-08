@@ -37,64 +37,74 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UcdComponentFileServiceImpl implements UcdComponentService {
 
-    protected Map<String, UcdComponent> map = new HashMap<>();
+    private Map<String, HashMap<String, UcdComponent>> repoMaps = new HashMap<>();
     private String repoDir; // = "/home/floo/ucdrepo";
+    private Map<String, String> repoDirAbsolutename = new HashMap<>();
+    private Map<String, ArrayList<String>> repoTypes = new HashMap<>();
 
-    private Path rootLocation;
+    // private Path rootLocation;
 
     @Autowired
-    public UcdComponentFileServiceImpl(@Value("${file.upload.dir}") final String repodir) {
+    public UcdComponentFileServiceImpl(@Value("${file.home.dir}") final String repodir) {
 
         this.repoDir = repodir;
-        this.rootLocation = Paths.get(this.repoDir);
+        // this.rootLocation = Paths.get(this.repoDir);
 
-        log.debug("Root Location is: " + repoDir);
+        System.out.println("initialize File Tree with all components " + repoDir);
 
         initialize();
     }
 
     private void initialize() {
-        System.out.println("initialize File Tree with all components in mw and application");
         try {
-            System.out.println("File Directory: " + repoDir);
-            File f = new File(repoDir); // current directory
+            String[] repos = repoDir.split(" ");
 
-            File[] files = f.listFiles();
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    log.debug("directory: " + file.getCanonicalPath());
-                    for (File dirComponent : file.listFiles()) {
-                        if (dirComponent.isDirectory()) {
+            for (String repo : repos) {
+                File repoFile = new File(repo); // current directory
 
-                            UcdComponent ucdcomponent = new UcdComponent(dirComponent.getName(),
-                                    dirComponent.getParent(), dirComponent.getParentFile().getName());
-
-                            // for (File version : dirComponent.listFiles()) {
-                            // if (version.isDirectory()) {
-                            // File[] filesFromVersion = version.listFiles();
-                            // Version dirVersion = new Version(version.getName());
-                            // ucdcomponent.addVersion(dirVersion);
-                            // }
-                            // }
-
-                            // // Sort files by Versionnumbers
-                            // List<Versions> files = ucdcomponent.getVersions();
-                            // files.sort(Comparator.comparing(File::getName));
-
-                            // for (File file : files) {
-                            // log.debug(file.getName());
-
-                            // }
-
-                            map.put(ucdcomponent.getName(), ucdcomponent);
-
-                        }
-                    }
-
+                if (!repoFile.isDirectory()) {
+                    log.error("Home Base is not a directory");
+                    break;
                 } else {
-                    System.out.print("unexpected file:" + file.getCanonicalFile());
+                    repoDirAbsolutename.put(repoFile.getName(), repo);
+                    log.info("initialize " + repoFile.getName());
                 }
 
+                String homeBase = repoFile.getName();
+
+                // Make a new HashMap for a repo and put it to repoMaps
+                HashMap<String, UcdComponent> map = new HashMap<>();
+                repoMaps.put(homeBase, map);
+
+                // make a list for all types and put it to repoTypes Map
+                ArrayList<String> types = new ArrayList<String>();
+                repoTypes.put(homeBase, types);
+
+                File[] files = repoFile.listFiles();
+                for (File file : files) {
+                    if (file.isDirectory()) { // this is the types directory
+                        log.debug("type directory: " + file.getCanonicalPath());
+                        // add types to the typeslist
+                        types.add(file.getName());
+
+                        for (File dirComponent : file.listFiles()) {
+                            if (dirComponent.isDirectory()) {
+
+                                UcdComponent ucdcomponent = new UcdComponent(dirComponent.getName(), homeBase,
+                                        dirComponent.getParent(), dirComponent.getParentFile().getName());
+
+                                map.put(ucdcomponent.getName(), ucdcomponent);
+
+                            }
+                        }
+
+                    } else {
+                        System.out.print("unexpected file:" + file.getCanonicalFile());
+
+                    }
+                }
+
+                Collections.sort(types);
             }
 
         } catch (Exception e) {
@@ -104,28 +114,45 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
     }
 
-    public Set<UcdComponent> findAll() {
+    /**
+     * 
+     */
+    public Set<UcdComponent> findAllComponents(String homeBase) {
+        Map<String, UcdComponent> map = this.repoMaps.get(homeBase);
 
         return new HashSet<>(map.values());
     }
 
-    public Set<UcdComponent> findAllByType(String type) {
+    /**
+     * 
+     */
+    public List<String> findAllTypes(String homeBase) {
+        ArrayList<String> types = this.repoTypes.get(homeBase);
+
+        return types;
+    }
+
+    public Set<UcdComponent> findAllComponentsByType(String homeBase, String type) {
+
+        Map<String, UcdComponent> map = this.repoMaps.get(homeBase);
 
         // Map -> Stream -> Filter -> Map
-        Map<String, UcdComponent> collect = map.entrySet().stream().filter(map -> map.getValue().getType().equals(type))
+        Map<String, UcdComponent> collect = map.entrySet().stream()
+                .filter(mapt -> mapt.getValue().getType().equals(type))
                 .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 
         return new HashSet<>(collect.values());
     }
 
-    public String findComponentTypeDirectory(String type) {
-        return repoDir + "/" + type;
+    public String findComponentTypeDirectory(String baseHome, String type) {
+        return repoDirAbsolutename.get(baseHome) + "/" + type;
     }
 
     public Version findVersionByName(UcdComponent component, String versionname) {
 
         List<Version> versions = component.getVersions();
         for (Version version : versions) {
+            // Only load the files of the wanted version
             if (version.getDirectory().equals(versionname)) {
                 log.debug("find all Files from " + version.getDirectory());
 
@@ -142,10 +169,10 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                 return version;
             }
         }
-        return null; // --> @todo is this correct?
+        return null; // --> shouldn't be null
     }
 
-    public static void addAllFilesToVersion(File dir, Version version) {
+    private static void addAllFilesToVersion(File dir, Version version) {
         try {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -163,10 +190,10 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         }
     }
 
-    public UcdComponent findById(String id) {
-        return findByName(id);
+    // public UcdComponent findById(String id) {
+    // return findByName(id);
 
-    }
+    // }
 
     public UcdComponent save(UcdComponent component) {
 
@@ -175,12 +202,13 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                 throw new RuntimeException("Object Name cannot be null");
             }
 
-            component.setParentDirectory(repoDir + "/" + component.getType());
+            log.debug("HomeBase for to to be saved component: " + repoDirAbsolutename.get(component.getHomeBase()));
+            component.setParentDirectory(repoDirAbsolutename.get(component.getHomeBase()) + "/" + component.getType());
             component.setDirectory(component.getParentDirectory() + "/" + component.getName());
 
             // save to filesystem
             new File(component.getDirectory()).mkdirs();
-            map.put(component.getName(), component);
+            repoMaps.get(component.getHomeBase()).put(component.getName(), component);
         } else {
             throw new RuntimeException("Object cannot be null");
         }
@@ -228,8 +256,8 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         log.debug("rename component " + oldName + "  to " + component.getName());
         try {
             FileUtils.moveDirectory(dirOld, dirNew);
-            map.remove(oldName);
-            map.put(component.getName(), component);
+            repoMaps.get(component.getHomeBase()).remove(oldName);
+            repoMaps.get(component.getHomeBase()).put(component.getName(), component);
 
         } catch (FileExistsException e) {
             log.error("Renaming failed, because directory already exists", e);
@@ -251,7 +279,8 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                 throw new RuntimeException("Version Name cannot be null");
             }
 
-            UcdComponent component = map.get(version.getUcdComponent().getName());
+            UcdComponent component = repoMaps.get(version.getUcdComponent().getHomeBase())
+                    .get(version.getUcdComponent().getName());
             component.addVersion(version);
             // save to filesystem
             log.debug("save version: " + version.getDirectory());
@@ -275,6 +304,12 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return version;
     }
 
+    /**
+     * Adds a subdirectory to a version directory
+     * 
+     * @param version      Version where dir is to be added
+     * @param absolutePath Path to subdirectory that will be created
+     */
     public Version addDirToVersion(Version version, String absolutePath) {
         // todo save a new directory to a version
         File dirNew = new File(absolutePath);
@@ -283,6 +318,12 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return version;
     }
 
+    /**
+     * Adds a File to a subdirectory of a version
+     * 
+     * @param version  Version where file is to be added
+     * @param filepath Path to subdirectory where the file will be added
+     */
     public Version addFileToVersion(Version version, String filePath, MultipartFile file) {
         // saveVersion(version);
 
@@ -343,7 +384,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
      * @param component component that will be deleted
      */
     public void delete(UcdComponent component) {
-        map.entrySet().removeIf(entry -> entry.getValue().equals(component));
+        repoMaps.get(component.getHomeBase()).entrySet().removeIf(entry -> entry.getValue().equals(component));
 
         try {
             deleteFileDirectory(component.getDirectory());
@@ -395,10 +436,11 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
     /**
      * Find a component by name
      * 
-     * @param name String
+     * @param homeBase String
+     * @param name     String
      */
-    public UcdComponent findByName(String name) {
-        UcdComponent component = map.get(name);
+    public UcdComponent findByName(String homeBase, String name) {
+        UcdComponent component = repoMaps.get(homeBase).get(name);
 
         Path path = Paths.get(component.getParentDirectory(), component.getName());
         File dirComponent = path.toFile();

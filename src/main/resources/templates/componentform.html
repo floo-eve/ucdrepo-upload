@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${type})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
 
 <head>
     <meta charset="UTF-8">
@@ -8,9 +8,23 @@
 </head>
 
 <body>
-    <h2>Create / Edit Component</h2>
+
+
     <div class="container">
-        <form th:object="${component}" th:action="@{/component/{type}(type=*{type})}" method="post">
+        <ol class="breadcrumb">
+            <li><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=${homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            </li>
+            <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                    th:text='*{type}'>Types</a>
+            </li>
+        </ol>
+    </div>
+
+    <div class="container">
+        <h2>Create / Edit Component</h2>
+        <form th:object="${component}"
+            th:action="@{/{homebase}/type/{type}/component(homebase=*{homeBase},type=*{type})}" method="post">
             <input type="hidden" th:field="*{type}" />
             <div class="form-group">
                 <label>Name</label>

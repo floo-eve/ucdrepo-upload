@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Repo Types</title>
+</head>
+
+<body>
+    <h2 th:text="|Types of Repo ${homeBase}|">Repo Types</h2>
+
+    <table id="types" class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>View</th>
+            <th>Rename</th>
+
+        </tr>
+        <tr th:each="type : ${types}">
+            <td th:text="${type}">Type Name</td>
+            <td><a class="btn btn-default" href="#" th:href="${type + '/component/list'}">View</a>
+            </td>
+            <td><a class="btn btn-default" href="#" th:href="${'edit/' + type}">Rename</a>
+            </td>
+
+        </tr>
+    </table>
+    <a th:href="${'new'}" class="btn btn-default">New</a>
+
+
+</body>
+
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${type})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
 
 <head>
     <meta charset="UTF-8">
@@ -19,14 +19,28 @@
 </head>
 
 <body>
+
     <div class="container">
-        <h2>Rename Component</h2>
+        <ol class="breadcrumb">
+            <li><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=${homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            </li>
+            <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                    th:text='*{type}'>Types</a>
+            </li>
+        </ol>
+    </div>
+
+
+    <div class="container">
+        <h2>Rename Component </h2>
     </div>
     <div class="alert alert-danger" th:if="${error}">
         <p th:text="${error}"></p>
     </div>
     <div class=" container">
-        <form th:object="${component}" th:action="@{/component/{type}/rename/{name}(type=*{type}, name=*{name})}"
+        <form th:object="${component}"
+            th:action="@{/{homebase}/type/{type}/component/rename/{name}(homebase=*{homeBase},type=*{type}, name=*{name})}"
             method="post">
             <input type="hidden" th:field="*{type}" />
             <div class="form-group">

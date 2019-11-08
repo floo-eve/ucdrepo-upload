@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.type})}">
+    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.homeBase})}">
 
 <head>
     <meta charset="UTF-8" />
@@ -8,15 +8,21 @@
 </head>
 
 <body>
-
-    <ol class="breadcrumb">
+    <ol class="breadcrumb" th:object="${version}">
         <li><a href="#" th:href="@{'/index'}">Home</a></li>
-        <li><a href="#" th:href="@{'/component/'+${version.ucdComponent.type} +'/list'}"
-                th:text="${version.ucdComponent.type}">Application</a>
+        <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{ucdComponent.homeBase})}"
+                th:text='*{ucdComponent.homeBase}'>HomeBase</a>
         </li>
-        <li><a href="#" th:href="@{'/component/'+${version.ucdComponent.type} +'/'+${version.ucdComponent.name}}"
-                th:text="${version.ucdComponent.name}">Cadi</a></li>
+        <li><a href="#"
+                th:href="@{/{homebase}/type/{type}/component/list(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type})}"
+                th:text='*{ucdComponent.type}'>Component</a>
+        </li>
+        <li><a href="#"
+                th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
+                th:text="*{ucdComponent.name}">Testapp</a></li>
     </ol>
+
+
 
     <h2 th:text="|Version ${version.directory} of ${version.ucdComponent.name}|">Versions of Component</h2>
 

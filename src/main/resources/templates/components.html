@@ -1,44 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${type})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Application Components</title>
+    <title>Components</title>
 </head>
 
 <body>
-    <h2 th:text="|${type} components|">Application Components</h2>
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=${homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            </li>
+        </ol>
+    </div>
+    <div class="container">
+        <h2 th:text="|Components of type ${type}|">Components of type mw</h2>
 
-    <table id="components" class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Directory</th>
-            <th>View</th>
-            <th>Rename</th>
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <table id="components" class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Directory</th>
+                <th>View</th>
+                <th>Rename</th>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
 
-                <th>Delete</th>
-            </div>
+                    <th>Delete</th>
+                </div>
 
-        </tr>
-        <tr th:each="component : ${components}">
-            <td th:text="${component.name}">Component Name</td>
-            <td th:text="${component.directory}">Component Directory</td>
-            <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
-            </td>
-            <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Rename</a>
-            </td>
-
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
-                <td>
-
-                    <a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
+            </tr>
+            <tr th:each="component : ${components}">
+                <td th:text="${component.name}">Component Name</td>
+                <td th:text="${component.directory}">Component Directory</td>
+                <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
                 </td>
-            </div>
-        </tr>
-    </table>
-    <a th:href="${'new'}" class="btn btn-default">New</a>
+                <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Rename</a>
+                </td>
 
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td>
+
+                        <a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
+                    </td>
+                </div>
+            </tr>
+        </table>
+        <a th:href="${'new'}" class="btn btn-default">New</a>
+    </div>
 
 </body>
 

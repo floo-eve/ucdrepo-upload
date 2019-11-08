@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${component.type})}">
+    th:replace="~{fragments/layout :: layout (~{::body}, ${component.homeBase})}">
 
 <head>
     <meta charset="UTF-8" />
@@ -8,12 +8,17 @@
 </head>
 
 <body>
-    <ol class="breadcrumb">
+
+    <ol class="breadcrumb" th:object="${component}">
         <li><a href="#" th:href="@{'/index'}">Home</a></li>
-        <li><a href="#" th:href="@{'/component/'+${component.type} +'/list'}"
-                th:text='${component.type}'>Application</a>
+        <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}" th:text='*{homeBase}'>HomeBase</a>
         </li>
+        <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                th:text='*{type}'>Component</a>
+        </li>
+
     </ol>
+
 
     <h2 th:text="${component.name}">Component Details</h2>
 

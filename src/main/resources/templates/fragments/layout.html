@@ -57,16 +57,15 @@
                         <span>Home</span>
                     </li>
 
-                    <li
-                        th:replace="::menuItem ('/component/applications/list','applications','Application Components','th-list','App Components')">
+                    <li th:replace="::menuItem ('/repolx/type/list','repolx','Repolx Types','th-list','Repolx Types')">
                         <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                        <span>Application Components</span>
+                        <span>Repolx Types</span>
                     </li>
 
                     <li
-                        th:replace="::menuItem ('/component/mw/list','mw','Middleware Components','th-list','Mw Components')">
+                        th:replace="::menuItem ('/repowin/type/list','repowin','Repowin Types','th-list','Repowin Types')">
                         <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                        <span>Middleware Components</span>
+                        <span>Repowin Types</span>
                     </li>
 
                     <li th:replace="::menuItem ('/logout','logout','Logout','th-logout','Logout')">

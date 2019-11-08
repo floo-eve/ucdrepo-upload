@@ -1,5 +1,6 @@
 package ch.set.ucd.ucd4u.services;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +14,11 @@ import ch.set.ucd.ucd4u.model.Version;
  */
 public interface UcdComponentService {
 
-    public Set<UcdComponent> findAllByType(String type);
+    public Set<UcdComponent> findAllComponentsByType(String homeBase, String type);
 
-    public Set<UcdComponent> findAll();
+    public Set<UcdComponent> findAllComponents(String homeBase);
+
+    public List<String> findAllTypes(String homeBase);
 
     public UcdComponent save(UcdComponent component);
 
@@ -27,9 +30,7 @@ public interface UcdComponentService {
 
     public void deleteFile(Version version, String absoluteFilePath);
 
-    // public void deleteById(ID id);
-
-    public UcdComponent findByName(String name);
+    public UcdComponent findByName(String homeBase, String name);
 
     public Version findVersionByName(UcdComponent component, String versionname);
 
@@ -43,6 +44,6 @@ public interface UcdComponentService {
 
     public Version addDirToVersion(Version version, String dirPath);
 
-    public String findComponentTypeDirectory(String type);
+    public String findComponentTypeDirectory(String homeBase, String type);
 
 }

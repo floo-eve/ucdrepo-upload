@@ -32,9 +32,10 @@ public class ComponentController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/new")
-    public String newComponent(@PathVariable String type, Model model) {
-        UcdComponent newcomp = new UcdComponent("", ucdComponentService.findComponentTypeDirectory(type), type);
+    @GetMapping("/{homeBase}/type/{type}/component/new")
+    public String newComponent(@PathVariable String homeBase, @PathVariable String type, Model model) {
+        UcdComponent newcomp = new UcdComponent("", homeBase,
+                ucdComponentService.findComponentTypeDirectory(homeBase, type), type);
         model.addAttribute("component", newcomp);
         log.debug("component new");
         return "componentform";
@@ -48,12 +49,14 @@ public class ComponentController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{type}")
-    public String createComponent(@PathVariable String type, UcdComponent component, Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component")
+    public String createComponent(@PathVariable String homeBase, @PathVariable String type, UcdComponent component,
+            Model model) {
         System.out.println("Create component: " + component.getName());
         System.out.println("componenttype: " + component.getType());
+        System.out.println("componenthometype: " + component.getHomeBase());
         ucdComponentService.save(component);
-        return "redirect:/component/{type}/list";
+        return "redirect:/{homeBase}/type/{type}/component/list";
     }
 
     /**
@@ -63,9 +66,10 @@ public class ComponentController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/{name}")
-    public String getComponentByName(@PathVariable String type, @PathVariable String name, Model model) {
-        UcdComponent component = ucdComponentService.findByName(name);
+    @GetMapping("/{homeBase}/type/{type}/component/{name}")
+    public String getComponentByName(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String name, Model model) {
+        UcdComponent component = ucdComponentService.findByName(homeBase, name);
         if (component == null) {
             component = new UcdComponent();
         }
@@ -83,13 +87,15 @@ public class ComponentController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/list")
-    public String getComponents(@PathVariable String type, Model model) {
-        List<UcdComponent> list = new ArrayList<UcdComponent>(ucdComponentService.findAllByType(type));
+    @GetMapping("/{homeBase}/type/{type}/component/list")
+    public String getComponents(@PathVariable String homeBase, @PathVariable String type, Model model) {
+        List<UcdComponent> list = new ArrayList<UcdComponent>(
+                ucdComponentService.findAllComponentsByType(homeBase, type));
         list.sort(Comparator.comparing(UcdComponent::getName));
 
         model.addAttribute("components", list);
         model.addAttribute("type", type);
+        model.addAttribute("homeBase", homeBase);
         log.debug("list components");
         return "components";
     }
@@ -101,9 +107,10 @@ public class ComponentController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/edit/{name}")
-    public String editComponent(@PathVariable String type, @PathVariable String name, Model model) {
-        UcdComponent component = ucdComponentService.findByName(name);
+    @GetMapping("/{homeBase}/type/{type}/component/edit/{name}")
+    public String editComponent(@PathVariable String homeBase, @PathVariable String type, @PathVariable String name,
+            Model model) {
+        UcdComponent component = ucdComponentService.findByName(homeBase, name);
         if (component == null) {
             // TODO should throw exception?
             component = new UcdComponent();
@@ -120,10 +127,10 @@ public class ComponentController {
      * @param component
      * @return
      */
-    @PostMapping("/component/{type}/{name}")
-    public String updateComponent(@PathVariable String type, UcdComponent component) {
+    @PostMapping("/{homeBase}/type/{type}/component/{name}")
+    public String updateComponent(@PathVariable String homeBase, @PathVariable String type, UcdComponent component) {
         ucdComponentService.save(component);
-        return "redirect:/component/" + type + "/" + component.getName();
+        return String.format("redirect:/%s/type/%s/component/%s", homeBase, type, component.getName());
     }
 
     /**
@@ -132,11 +139,11 @@ public class ComponentController {
      * @param component
      * @return
      */
-    @PostMapping("/component/{type}/rename/{oldname}")
-    public String updateComponent(@PathVariable String type, @PathVariable String oldname, @RequestParam String name,
-            Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/rename/{oldname}")
+    public String updateComponent(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String oldname, @RequestParam String name, Model model) {
         log.debug("rename " + oldname + " to " + name);
-        UcdComponent component = ucdComponentService.findByName(oldname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, oldname);
         component.setName(name);
 
         try {
@@ -148,7 +155,7 @@ public class ComponentController {
             model.addAttribute("component", component);
             return "componentformrename";
         }
-        return "redirect:/component/" + type + "/list";
+        return String.format("redirect:/%s/type/%s/component/list", homeBase, type);
     }
 
     /**
@@ -158,11 +165,12 @@ public class ComponentController {
      * @param name component name
      * @return
      */
-    @GetMapping("/component/{type}/delete/{name}")
-    public String deleteComponent(@PathVariable String type, @PathVariable String name) {
+    @GetMapping("/{homeBase}/type/{type}/component/delete/{name}")
+    public String deleteComponent(@PathVariable String homeBase, @PathVariable String type, @PathVariable String name) {
         log.debug("delete component " + name);
-        UcdComponent component = ucdComponentService.findByName(name);
+        UcdComponent component = ucdComponentService.findByName(homeBase, name);
         ucdComponentService.delete(component);
-        return "redirect:/component/" + type + "/list";
+
+        return String.format("redirect:/%s/type/%s/component/list", homeBase, type);
     }
 }

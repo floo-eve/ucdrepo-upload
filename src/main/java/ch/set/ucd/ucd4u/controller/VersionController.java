@@ -1,7 +1,6 @@
 package ch.set.ucd.ucd4u.controller;
 
 import java.io.File;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,10 +32,13 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/{componentname}/version/new")
-    public String newVersion(@PathVariable String type, @PathVariable String componentname, Model model) {
-        UcdComponent component = ucdComponentService.findByName(componentname);
+    @GetMapping("/{homeBase}/type/{type}/component/{componentname}/version/new")
+    public String newVersion(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String componentname, Model model) {
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
+        log.debug("**** homeBase: " + component.getHomeBase());
         Version version = new Version();
+
         version.setUcdComponent(component);
         model.addAttribute("version", version);
         return "versionform";
@@ -50,16 +52,18 @@ public class VersionController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version")
-    public String createVersion(@PathVariable String type, @RequestParam("file") MultipartFile file, Version version,
-            Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version")
+    public String createVersion(@PathVariable String homeBase, @PathVariable String type,
+            @RequestParam("file") MultipartFile file, Version version, Model model) {
 
         log.debug("new directory: " + version.getDirectory());
         log.debug(version.getUcdComponent().getName());
         log.debug("file to upload: " + file.getOriginalFilename());
         log.debug("----");
 
-        // TODO check if version allready exists
+        version.getUcdComponent().setHomeBase(homeBase);
+
+        // check if version allready exists
         if (version.getDirectory().equals("")) {
             return "versionform";
         }
@@ -67,7 +71,7 @@ public class VersionController {
         ucdComponentService.saveVersion(version);
         ucdComponentService.addFileToVersion(version, file);
 
-        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName();
+        return String.format("redirect:/%s/type/%s/component/%s", homeBase, type, version.getUcdComponent().getName());
 
     }
 
@@ -78,12 +82,13 @@ public class VersionController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/{versionname}/file")
-    public String addFileToVersion(@PathVariable String type, @RequestParam("file") MultipartFile file,
-            @PathVariable String componentname, @PathVariable String versionname,
-            @RequestParam("absoluteParentPath") String absoluteParentPath, Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version/addfile/{versionname}")
+    public String addFileToVersion(@PathVariable String homeBase, @PathVariable String type,
+            @RequestParam("file") MultipartFile file, @PathVariable String componentname,
+            @PathVariable String versionname, @RequestParam("absoluteParentPath") String absoluteParentPath,
+            Model model) {
 
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
 
@@ -94,8 +99,8 @@ public class VersionController {
 
         ucdComponentService.addFileToVersion(version, absoluteParentPath, file);
 
-        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/edit/"
-                + version.getDirectory();
+        return String.format("redirect:/%s/type/%s/component/%s/version/edit/%s", homeBase, type,
+                version.getUcdComponent().getName(), version.getDirectory());
 
     }
 
@@ -105,11 +110,12 @@ public class VersionController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/{versionname}/delete/file")
-    public String deleteFile(@PathVariable String type, @PathVariable String componentname,
-            @PathVariable String versionname, @RequestParam("filepath") String filepath, Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version/deletefile/{versionname}")
+    public String deleteFile(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String componentname, @PathVariable String versionname,
+            @RequestParam("filepath") String filepath, Model model) {
 
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
         ucdComponentService.deleteFile(version, filepath);
@@ -126,13 +132,14 @@ public class VersionController {
      * @param model
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/{versionname}/dir")
-    public String addDirToVersion(@PathVariable String type, @RequestParam("dirname") String dirname,
-            @PathVariable String componentname, @PathVariable String versionname,
-            @RequestParam("absoluteParentPath") String absoluteParentPath, Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version/createdir/{versionname}")
+    public String addDirToVersion(@PathVariable String homeBase, @PathVariable String type,
+            @RequestParam("dirname") String dirname, @PathVariable String componentname,
+            @PathVariable String versionname, @RequestParam("absoluteParentPath") String absoluteParentPath,
+            Model model) {
 
         log.debug("-------------------------------------------------------");
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
 
@@ -142,9 +149,8 @@ public class VersionController {
 
         ucdComponentService.addDirToVersion(version, absoluteParentPath + File.separator + dirname);
 
-        return "redirect:/component/" + type + "/" + version.getUcdComponent().getName() + "/version/edit/"
-                + version.getDirectory();
-
+        return String.format("redirect:/%s/type/%s/component/%s/version/edit/%s", homeBase, type, componentname,
+                version.getDirectory());
     }
 
     /**
@@ -154,9 +160,10 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/{componentname}/version/{versionname}")
-    public String getVersionByName(@PathVariable String componentname, @PathVariable String versionname, Model model) {
-        UcdComponent component = ucdComponentService.findByName(componentname);
+    @GetMapping("/{homeBase}/type/{type}/component/{componentname}/version/{versionname}")
+    public String getVersionByName(@PathVariable String homeBase, @PathVariable String componentname,
+            @PathVariable String versionname, Model model) {
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
 
@@ -176,10 +183,11 @@ public class VersionController {
      * @param model
      * @return
      */
-    @GetMapping("/component/{type}/{componentname}/version/edit/{versionname}")
-    public String editVersion(@PathVariable String componentname, @PathVariable String versionname, Model model) {
+    @GetMapping("/{homeBase}/type/{type}/component/{componentname}/version/edit/{versionname}")
+    public String editVersion(@PathVariable String homeBase, @PathVariable String componentname,
+            @PathVariable String versionname, Model model) {
 
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
 
@@ -200,12 +208,13 @@ public class VersionController {
      * @param version
      * @return
      */
-    @PostMapping("/component/{type}/{componentname}/version/rename/{versionname}")
-    public String changeVersionName(@PathVariable String type, @PathVariable String componentname,
-            @PathVariable String versionname, @RequestParam("directory") String newName, Model model) {
+    @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version/rename/{versionname}")
+    public String changeVersionName(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String componentname, @PathVariable String versionname,
+            @RequestParam("directory") String newName, Model model) {
         log.debug("**** rename to " + newName);
 
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
         Version version = ucdComponentService.findVersionByName(component, versionname);
 
         try {
@@ -233,16 +242,17 @@ public class VersionController {
      * @param version
      * @return
      */
-    @GetMapping("/component/{type}/{componentname}/version/delete/{versionname}")
-    public String deleteVersion(@PathVariable String type, @PathVariable String componentname,
-            @PathVariable String versionname) {
+    @GetMapping("/{homeBase}/type/{type}/component/{componentname}/version/delete/{versionname}")
+    public String deleteVersion(@PathVariable String homeBase, @PathVariable String type,
+            @PathVariable String componentname, @PathVariable String versionname) {
 
         log.debug(componentname + ": delete Version " + versionname);
-        UcdComponent component = ucdComponentService.findByName(componentname);
+        UcdComponent component = ucdComponentService.findByName(homeBase, componentname);
 
         Version version = ucdComponentService.findVersionByName(component, versionname);
         ucdComponentService.deleteVersion(version);
-        return "redirect:/component/" + type + "/" + componentname;
+
+        return String.format("redirect:/%s/type/%s/component/%s", homeBase, type, componentname);
     }
 
 }

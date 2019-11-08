@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import ch.set.ucd.ucd4u.model.Version;
 import ch.set.ucd.ucd4u.model.UcdComponent;
-import ch.set.ucd.ucd4u.services.UcdComponentService;
 
 /**
  * Map implementation for UcdComponentService

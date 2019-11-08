@@ -13,15 +13,17 @@ public class UcdComponent {
     private String directory;
     private ArrayList<Version> versions;
     private String parentDirectory;
+    private String homeBase;
     private String type;
 
     public UcdComponent() {
 
     }
 
-    public UcdComponent(String name, String parentDirectory, String type) {
+    public UcdComponent(String name, String homeBase, String parentDirectory, String type) {
         this.name = name;
         this.parentDirectory = parentDirectory;
+        this.homeBase = homeBase;
         this.type = type;
         this.versions = new ArrayList<Version>();
         this.directory = this.parentDirectory + "/" + name;

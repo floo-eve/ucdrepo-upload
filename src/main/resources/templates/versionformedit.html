@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.type})}">
+    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.homeBase})}">
 
 
 <head>
@@ -17,22 +17,27 @@
 
 <body>
     <div class="container">
-        <ol class="breadcrumb" th:object="${version}">
+        <ol class="breadcrumb" th:object="${version.ucdComponent}">
             <li><a href="#" th:href="@{'/index'}">Home</a></li>
-            <li><a href="#" th:href="@{/component/{type}/list(type=*{ucdComponent.type})}"
-                    th:text='*{ucdComponent.type}'>Application</a>
+            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            </li>
+            <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                    th:text='*{type}'>Component</a>
             </li>
             <li><a href="#"
-                    th:href="@{/component/{type}/{component}(type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
-                    th:text="*{ucdComponent.name}">Testapp</a></li>
+                    th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{homeBase},type=*{type}, component=*{name})}"
+                    th:text="*{name}">Testapp</a></li>
         </ol>
+
+
 
         <h2 th:text="|Edit Version for ${version.ucdComponent.name}|">Edit Version</h2>
     </div>
 
     <div class="container">
+
         <form th:object="${version}"
-            th:action="@{/component/{type}/{component}/version/rename/{versionnummer}(type=*{ucdComponent.type}, component=*{ucdComponent.name}, versionnummer=*{directory})}"
+            th:action="@{/{homebase}/type/{type}/component/{component}/version/rename/{versionnummer}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name}, versionnummer=*{directory})}"
             method="post">
 
             <input type="hidden" th:field="*{ucdComponent.name}" />
@@ -47,9 +52,9 @@
             <a class="btn btn-default" data-toggle="collapse" href="#addDirToVersion">Add Dir</a>
 
         </form>
-        <div id="addDirToVersion" class="collapse">
+        <div id="addDirToVersion" class="collapse" th:object="${version}">
             <form
-                th:action="@{/component/{type}/{component}/version/{versionnummer}/dir(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                th:action="@{/{homebase}/type/{type}/component/{component}/version/createdir/{versionnumber}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type},component=*{ucdComponent.name},versionnumber=*{directory})}"
                 method="post">
                 <input name="absoluteParentPath" type="hidden" th:value="${version.getAbsoluteVersionPath()}" />
                 <div class="form-group">
@@ -60,9 +65,9 @@
             </form>
 
         </div>
-        <div id="addFileToVersion" class="collapse">
+        <div id="addFileToVersion" class="collapse" th:object="${version}">
             <form
-                th:action="@{/component/{type}/{component}/version/{versionnummer}/file(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                th:action="@{/{homebase}/type/{type}/component/{component}/version/addfile/{versionnumber}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type},component=*{ucdComponent.name},versionnumber=*{directory})}"
                 method="post" enctype="multipart/form-data">
                 <input name="absoluteParentPath" type="hidden" th:value="${version.getAbsoluteVersionPath()}" />
 
@@ -100,7 +105,7 @@
 
                         <div>
                             <form
-                                th:action="@{/component/{type}/{component}/version/{versionnummer}/delete/file(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                                th:action="@{/{homebase}/type/{type}/component/{component}/version/deletefile/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post">
                                 <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addDir"
                                     th:class="'glyphicon  glyphicon-folder-close'"></a>
@@ -116,7 +121,7 @@
                         </div>
                         <div id="addDir" class="collapse">
                             <form
-                                th:action="@{/component/{type}/{component}/version/{versionnummer}/dir(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                                th:action="@{/{homebase}/type/{type}/component/{component}/version/createdir/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post">
                                 <input name="absoluteParentPath" type="hidden" th:value="${file.absolutePath}" />
                                 <div class="form-group">
@@ -130,7 +135,7 @@
                         </div>
                         <div id="addFile" class="collapse">
                             <form
-                                th:action="@{/component/{type}/{component}/version/{versionnummer}/file(type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
+                                th:action="@{/{homebase}/type/{type}/component/{component}/version/addfile/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post" enctype="multipart/form-data">
                                 <input name="absoluteParentPath" type="hidden" th:value="${file.absolutePath}" />
 
