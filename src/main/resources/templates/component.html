@@ -1,51 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${component.homeBase})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="fragments/layoutnew :: head('Component Details')">
     <meta charset="UTF-8" />
     <title>Component Details</title>
 </head>
 
 <body>
 
-    <ol class="breadcrumb" th:object="${component}">
-        <li><a href="#" th:href="@{'/index'}">Home</a></li>
-        <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}" th:text='*{homeBase}'>HomeBase</a>
-        </li>
-        <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
-                th:text='*{type}'>Component</a>
-        </li>
+    <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
 
-    </ol>
+    <nav aria-label="breadcrumb" th:object="${component}">
+        <ol class="breadcrumb black">
+            <li class="breadcrumb-item"><a th:href="@{'/index'}" href="#">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/{homebase}/type/list(homebase=${homeBase})}"
+                    th:text="${homeBase}">Repolx</a></li>
+            <li class="breadcrumb-item">
+                <a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+                    th:text="*{type}">mw</a>
+            </li>
 
+            <li class="breadcrumb-item active" aria-current="page" th:text="${component.name}">Cadi</li>
 
-    <h2 th:text="${component.name}">Component Details</h2>
-
-    <table id="appcomponents" class="table table-striped">
-        <tr>
-            <th>Version</th>
-            <th>View</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        <tr th:each="version: ${component.versions}">
-            <td th:text="${version.directory}">Version</td>
-            <td><a class="btn btn-default" href="#"
-                    th:href="${component.name + '/version/' + version.directory}">View</a>
-            </td>
-            <td><a class="btn btn-default" href="#"
-                    th:href="${component.name + '/version/edit/' + version.directory}">Edit</a>
-            </td>
-            <td><a class="btn btn-default" href="#"
-                    th:href="${component.name +'/version/delete/' + version.directory}">Delete</a>
-            </td>
-        </tr>
-    </table>
-
-    <a th:href="${component.name + '/version/new/'}" class="btn btn-default">New</a>
+        </ol>
+    </nav>
 
 
+    <div class="container">
+        <h2 th:text="${component.name}">Component Details</h2>
+
+        <table id="appcomponents" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>View</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="version: ${component.versions}">
+                    <td th:text="${version.directory}">Version</td>
+                    <td><a class="btn btn-outline-primary" href="#"
+                            th:href="${component.name + '/version/' + version.directory}">View</a>
+                    </td>
+                    <td><a class="btn btn-outline-primary" href="#"
+                            th:href="${component.name + '/version/edit/' + version.directory}">Edit</a>
+                    </td>
+                    <td><a class="btn btn-outline-primary" href="#"
+                            th:href="${component.name +'/version/delete/' + version.directory}">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a th:href="${component.name + '/version/new/'}" class="btn btn-outline-primary">New</a>
+
+    </div>
+    <div th:replace="fragments/layoutnew :: footer"></div>
 
 </body>
 

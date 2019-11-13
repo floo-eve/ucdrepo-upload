@@ -1,53 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="fragments/layoutnew :: head('Components')">
     <meta charset="UTF-8" />
     <title>Components</title>
 </head>
 
 <body>
-    <div class="container">
-        <ol class="breadcrumb">
-            <li><a href="#" th:href="@{'/index'}">Home</a></li>
-            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=${homeBase})}" th:text='*{homeBase}'>HomeBase</a>
-            </li>
+    <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb black">
+            <li class="breadcrumb-item"><a th:href="@{'/index'}" href="#">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/{homebase}/type/list(homebase=${homeBase})}"
+                    th:text="${homeBase}">Repolx</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${type}">Repolx</li>
         </ol>
-    </div>
+    </nav>
     <div class="container">
-        <h2 th:text="|Components of type ${type}|">Components of type mw</h2>
+        <h2 th:text="|Components in ${type}|">Components in mw</h2>
 
         <table id="components" class="table table-striped">
-            <tr>
-                <th>Name</th>
-                <th>Directory</th>
-                <th>View</th>
-                <th>Rename</th>
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Directory</th>
+                    <th>View</th>
+                    <th>Rename</th>
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
 
-                    <th>Delete</th>
-                </div>
+                        <th>Delete</th>
+                    </div>
 
-            </tr>
-            <tr th:each="component : ${components}">
-                <td th:text="${component.name}">Component Name</td>
-                <td th:text="${component.directory}">Component Directory</td>
-                <td><a class="btn btn-default" href="#" th:href="${component.name}">View</a>
-                </td>
-                <td><a class="btn btn-default" href="#" th:href="${'edit/' + component.name}">Rename</a>
-                </td>
-
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="component : ${components}">
+                    <td th:text="${component.name}">Component Name</td>
+                    <td th:text="${component.directory}">Component Directory</td>
+                    <td><a class="btn btn-outline-primary" href="#" th:href="${component.name}">View</a></td>
                     <td>
-
-                        <a class="btn btn-default" href="#" th:href="${'delete/' + component.name}">Delete</a>
+                        <a class="btn btn-outline-primary" href="#" th:href="${'edit/' + component.name}">Rename</a>
                     </td>
-                </div>
-            </tr>
-        </table>
-        <a th:href="${'new'}" class="btn btn-default">New</a>
-    </div>
 
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <td>
+
+                            <a class="btn btn-outline-primary" href="#"
+                                th:href="${'delete/' + component.name}">Delete</a>
+                        </td>
+                    </div>
+                </tr>
+            </tbody>
+
+        </table>
+        <a th:href="${'new'}" class="btn btn-outline-primary">New</a>
+    </div>
+    <div th:replace="fragments/layoutnew :: footer"></div>
 </body>
 
 </html>

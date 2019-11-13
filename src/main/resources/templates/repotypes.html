@@ -1,33 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, ${homeBase})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8" />
-    <title>Repo Types</title>
+<head th:replace="fragments/layoutnew :: head('Repo Types')">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title>Repo Types onyl tests</title>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}" />
+
 </head>
 
 <body>
-    <h2 th:text="|Types of Repo ${homeBase}|">Repo Types</h2>
+    <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
 
-    <table id="types" class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>View</th>
-            <th>Rename</th>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb black">
+            <li class="breadcrumb-item"><a th:href="@{'/index'}" href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${homeBase}">Repolx</li>
+        </ol>
+    </nav>
+    <div class="container">
+        <h2 th:text="|Subdirectories of ${homeBase}|">Repo Types</h2>
 
-        </tr>
-        <tr th:each="type : ${types}">
-            <td th:text="${type}">Type Name</td>
-            <td><a class="btn btn-default" href="#" th:href="${type + '/component/list'}">View</a>
-            </td>
-            <td><a class="btn btn-default" href="#" th:href="${'edit/' + type}">Rename</a>
-            </td>
+        <table id="types" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="text-align:right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="type : ${types}">
+                    <td th:text="${type}">Type Name</td>
+                    <td style="text-align:right"><a class="btn btn-outline-primary" href="#"
+                            th:href="${type + '/component/list'}">View</a>
+                        <a class="btn btn-outline-primary" href="#" th:href="${'edit/' + type}">Rename</a>
+                    </td>
 
-        </tr>
-    </table>
-    <a th:href="${'new'}" class="btn btn-default">New</a>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="new" class="btn btn-outline-primary">New</a>
 
+    </div>
 
+    <div th:replace="fragments/layoutnew :: footer"></div>
 </body>
 
 </html>

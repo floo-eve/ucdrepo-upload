@@ -1,42 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.homeBase})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="fragments/layoutnew :: head('Versions')">
     <meta charset="UTF-8" />
     <title>Version of a Components</title>
 </head>
 
 <body>
-    <ol class="breadcrumb" th:object="${version}">
-        <li><a href="#" th:href="@{'/index'}">Home</a></li>
-        <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{ucdComponent.homeBase})}"
-                th:text='*{ucdComponent.homeBase}'>HomeBase</a>
-        </li>
-        <li><a href="#"
-                th:href="@{/{homebase}/type/{type}/component/list(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type})}"
-                th:text='*{ucdComponent.type}'>Component</a>
-        </li>
-        <li><a href="#"
-                th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
-                th:text="*{ucdComponent.name}">Testapp</a></li>
-    </ol>
+
+    <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
 
 
+    <nav aria-label="breadcrumb">
 
-    <h2 th:text="|Version ${version.directory} of ${version.ucdComponent.name}|">Versions of Component</h2>
+        <ol class="breadcrumb black" th:object="${version}">
+            <li class="breadcrumb-item"><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li class="breadcrumb-item"><a href="#"
+                    th:href="@{/{homebase}/type/list(homebase=*{ucdComponent.homeBase})}"
+                    th:text='*{ucdComponent.homeBase}'>repolx</a>
+            </li>
+            <li class="breadcrumb-item"><a href="#"
+                    th:href="@{/{homebase}/type/{type}/component/list(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type})}"
+                    th:text='*{ucdComponent.type}'>application</a>
+            </li>
+            <li class="breadcrumb-item"><a href="#"
+                    th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
+                    th:text="*{ucdComponent.name}">Testapp</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="*{directory}">1.1.1</li>
 
-    <table id="files" class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Directory</th>
-        </tr>
-        <tr th:each="file : ${version.files}">
-            <td th:text="${file.name}">File Name</td>
-            <td th:text="${file.absolutePath}">File Directory</td>
-        </tr>
-    </table>
+        </ol>
+    </nav>
 
+
+    <div class="container">
+
+        <h2 th:text="|Version ${version.directory} of ${version.ucdComponent.name}|">Versions of Component</h2>
+
+        <table id="files" class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Directory</th>
+            </tr>
+            <tr th:each="file : ${version.files}">
+                <td th:text="${file.name}">File Name</td>
+                <td th:text="${file.absolutePath}">File Directory</td>
+            </tr>
+        </table>
+    </div>
+    <div th:replace="fragments/layoutnew :: footer"></div>
 </body>
 
 </html>

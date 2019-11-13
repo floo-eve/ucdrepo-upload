@@ -1,43 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="fragments/layoutnew :: head('Home or Index Page')">
     <meta charset="UTF-8" />
     <title>Ucd Repo Index</title>
 </head>
 
 <body>
-    <h2 th:text="#{welcome}">Welcome</h2>
+    <div th:replace="fragments/layoutnew :: header ('home')"></div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <img class="img-responsive" src="../static/resources/images/urbancodedeploy.png"
-                th:src="@{/resources/images/urbancodedeploy.png}" />
+
+    <div class="container">
+        <h2 th:text="#{welcome}">Welcome</h2>
+
+        <div class="row">
+            <div class="col-md-12">
+                <img class="img-responsive" src="../static/resources/images/urbancodedeploy.png"
+                    th:src="@{/resources/images/urbancodedeploy.png}" />
+            </div>
+        </div>
+        <div>
+            <div>Logged user: <span sec:authentication="principal.cn">Bob</span></div>
+            <div>Logged username: <span sec:authentication="principal.name">Bob</span></div>
+            <div>Logged dn: <span sec:authentication="principal.dn">Bob</span></div>
+            <div>Roles:
+
+                <span sec:authentication="principal.roles">[ROLE_USER, ROLE_ADMIN]</span>
+                <span sec:authentication="authorities">[ROLE_USER, ROLE_ADMIN]</span>
+
+
+
+
+                </div-->
+                <div>
+
+                    <div sec:authorize="hasRole('ROLE_USER')">
+                        This content is only shown to users.
+                    </div>
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        This content is only shown to admins.
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-    <div>
-        <div>Logged user: <span sec:authentication="principal.cn">Bob</span></div>
-        <div>Logged username: <span sec:authentication="principal.name">Bob</span></div>
-        <div>Logged dn: <span sec:authentication="principal.dn">Bob</span></div>
-        <div>Roles:
 
-            <span sec:authentication="principal.roles">[ROLE_USER, ROLE_ADMIN]</span>
-            <span sec:authentication="authorities">[ROLE_USER, ROLE_ADMIN]</span>
-
-
-
-
-            </div-->
-            <div>
-
-                <div sec:authorize="hasRole('ROLE_USER')">
-                    This content is only shown to users.
-                </div>
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
-                    This content is only shown to admins.
-                </div>
-
-            </div>
+    <div th:replace="fragments/layoutnew :: footer"></div>
 
 </body>
 

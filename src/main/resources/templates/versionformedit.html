@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{fragments/layout :: layout (~{::body}, ${version.ucdComponent.homeBase})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-
-<head>
+<head th:replace="fragments/layoutnew :: head('Edit Version')">
     <meta charset="UTF-8">
     <title>Edit Version</title>
-
-
-    <script type='text/javascript' src='http://code.jquery.com/jquery-2.0.2.js'></script>
-    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-    <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-        href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 </head>
 
 <body>
-    <div class="container">
+    <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
+
+
+
+    <nav aria-label="breadcrumb">
+
         <ol class="breadcrumb" th:object="${version.ucdComponent}">
-            <li><a href="#" th:href="@{'/index'}">Home</a></li>
-            <li><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}" th:text='*{homeBase}'>HomeBase</a>
+            <li class="breadcrumb-item"><a href="#" th:href="@{'/index'}">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" th:href="@{/{homebase}/type/list(homebase=*{homeBase})}"
+                    th:text='*{homeBase}'>HomeBase</a>
             </li>
-            <li><a href="#" th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
+            <li class="breadcrumb-item"><a href="#"
+                    th:href="@{/{homebase}/type/{type}/component/list(homebase=*{homeBase},type=*{type})}"
                     th:text='*{type}'>Component</a>
             </li>
-            <li><a href="#"
+            <li class="breadcrumb-item"><a href="#"
                     th:href="@{/{homebase}/type/{type}/component/{component}(homebase=*{homeBase},type=*{type}, component=*{name})}"
                     th:text="*{name}">Testapp</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${version.directory}">1.1.1</li>
         </ol>
 
-
+    </nav>
+    <div class="container">
 
         <h2 th:text="|Edit Version for ${version.ucdComponent.name}|">Edit Version</h2>
-    </div>
 
-    <div class="container">
 
         <form th:object="${version}"
             th:action="@{/{homebase}/type/{type}/component/{component}/version/rename/{versionnummer}(homebase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name}, versionnummer=*{directory})}"
@@ -47,9 +45,9 @@
                 <input type="text" th:field="*{directory}" class="form-control" placeholder="Version">
 
             </div><!-- /input-group -->
-            <button type="submit" class="btn btn-default">Rename</button>
-            <a class="btn btn-default" data-toggle="collapse" href="#addFileToVersion">Add File</a>
-            <a class="btn btn-default" data-toggle="collapse" href="#addDirToVersion">Add Dir</a>
+            <button type="submit" class="btn btn-outline-primary">Rename</button>
+            <a class="btn btn-outline-primary" data-toggle="collapse" href="#addFileToVersion">Add File</a>
+            <a class="btn btn-outline-primary" data-toggle="collapse" href="#addDirToVersion">Add Dir</a>
 
         </form>
         <div id="addDirToVersion" class="collapse" th:object="${version}">
@@ -61,7 +59,7 @@
                     <input type="text" name="dirname" class="form-control" placeholder="New Directory Name">
                 </div>
 
-                <button type=" submit" class="btn btn-default">Add</button>
+                <button type=" submit" class="btn btn-outline-primary">Add</button>
             </form>
 
         </div>
@@ -77,17 +75,13 @@
 
                 </div>
 
-                <button type=" submit" class="btn btn-default">Add</button>
+                <button type=" submit" class="btn btn-outline-primary">Add</button>
             </form>
 
         </div>
 
-    </div>
-    <div class="container">
 
-        <span>&nearrow;</span>
-
-        <table id="myTable" class="table table-striped">
+        <table id="versionTable" class="table table-striped">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -108,14 +102,13 @@
                                 th:action="@{/{homebase}/type/{type}/component/{component}/version/deletefile/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post">
                                 <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addDir"
-                                    th:class="'glyphicon  glyphicon-folder-close'"></a>
+                                    class="btn btn-outline-primary">Add Dir</a>
                                 <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addFile"
-                                    th:class="'glyphicon glyphicon-file'"></a>
+                                    class="btn btn-outline-primary">Add File</a>
 
                                 <input name="filepath" type="hidden" th:value="${file.absolutePath}" />
-                                <button type="submit" class="btn btn-default">
+                                <button type="submit" class="btn btn-outline-primary">Delete
 
-                                    <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             </form>
                         </div>
@@ -129,7 +122,7 @@
                                         placeholder="New Directory Name">
                                 </div>
 
-                                <button type=" submit" class="btn btn-default">Add</button>
+                                <button type=" submit" class="btn btn-outline-primary">Add</button>
                             </form>
 
                         </div>
@@ -145,65 +138,19 @@
 
                                 </div>
 
-                                <button type=" submit" class="btn btn-default">Add</button>
+                                <button type=" submit" class="btn btn-outline-primary">Add</button>
                             </form>
 
                         </div>
 
                     </td>
                 </tr>
-                <tr th:remove="all">
-                    <td>cadi.war</td>
-                    <td>/opt/repolx/application/cadi/1.0/cadi.wari</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr th:remove="all">
-                    <td>Prod</td>
-                    <td>
-                        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#addDir"
-                            aria-expanded="false" aria-controls="addDir">
-                            Add Dir
-                        </a>
-                        <div class="collapse" id="addDir">
-                            <div class="well">
-                                <div class="form-group">
-                                    <label>Subdirectory</label>
-                                    <input type="text" class="form-control" placeholder="Subdirectory">
-                                </div>
-                                <div>
-                                    <button type=" submit" class="btn btn-default">Submit</button>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#addFile"
-                            aria-expanded="false" aria-controls="addFile">
-                            Add File
-                        </a>
-                        <div class="collapse" id="addFile">
-                            <div class="well">
-                                <div class="form-group">
-                                    <label>File to upload</label>
-                                    <input type="file" name="file" />
-
-                                </div>
-                                <button type=" submit" class="btn btn-default">Submit</button>
-                            </div>
-                        </div>
-
-
-
-                    </td>
-                </tr>
-
 
 
             </tbody>
         </table>
     </div>
+    <div th:replace="fragments/layoutnew :: footer"></div>
 
 </body>
 

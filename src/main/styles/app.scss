@@ -1,0 +1,184 @@
+// 1 - Load project variables.
+// 2 - Load bootstrap sass files.
+// 3 - Load custom app sass files.
+
+// --------------------------------------------------------
+//  Import in the default bootstrap variables.
+//  Then override bootstrap default with project specific values.
+// --------------------------------------------------------
+
+//@import "../bower_components/bootstrap/scss/variables";
+@import "variables";
+
+// --------------------------------------------------------
+// Import required bootstrap sass files needed for this project.
+// Uncomment any bootstrap functionality required for this project.
+// The idea is to keep this as small as possible.
+// --------------------------------------------------------*/
+
+/* --------------------------------------------------------
+   Core mixins
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/mixins";
+
+
+
+/* --------------------------------------------------------
+   Reset and dependencies
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/normalize";
+//@import "../bower_components/bootstrap/scss/print";
+
+
+
+/* --------------------------------------------------------
+   Core CSS
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/reboot";
+//@import "../bower_components/bootstrap/scss/type";
+//@import "../bower_components/bootstrap/scss/images";
+//@import "../bower_components/bootstrap/scss/code";
+//@import "../bower_components/bootstrap/scss/grid";
+//@import "../bower_components/bootstrap/scss/tables";
+//@import "../bower_components/bootstrap/scss/forms";
+//@import "../bower_components/bootstrap/scss/buttons";
+
+
+
+/* --------------------------------------------------------
+   Components
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/animation";
+//@import "../bower_components/bootstrap/scss/dropdown";
+//@import "../bower_components/bootstrap/scss/button-group";
+//@import "../bower_components/bootstrap/scss/input-group";
+//@import "../bower_components/bootstrap/scss/custom-forms";
+//@import "../bower_components/bootstrap/scss/nav";
+//@import "../bower_components/bootstrap/scss/navbar";
+//@import "../bower_components/bootstrap/scss/card";
+//@import "../bower_components/bootstrap/scss/breadcrumb";
+//@import "../bower_components/bootstrap/scss/pagination";
+//@import "../bower_components/bootstrap/scss/pager";
+//@import "../bower_components/bootstrap/scss/labels";
+//@import "../bower_components/bootstrap/scss/jumbotron";
+//@import "../bower_components/bootstrap/scss/alert";
+//@import "../bower_components/bootstrap/scss/progress";
+//@import "../bower_components/bootstrap/scss/media";
+//@import "../bower_components/bootstrap/scss/list-group";
+//@import "../bower_components/bootstrap/scss/responsive-embed";
+//@import "../bower_components/bootstrap/scss/close";
+
+
+
+/* --------------------------------------------------------
+   Components w/ JavaScript
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/modal";
+//@import "../bower_components/bootstrap/scss/tooltip";
+//@import "../bower_components/bootstrap/scss/popover";
+//@import "../bower_components/bootstrap/scss/carousel";
+
+
+
+/* --------------------------------------------------------
+   Utility classes
+   -------------------------------------------------------- */
+
+//@import "../bower_components/bootstrap/scss/utilities";
+//@import "../bower_components/bootstrap/scss/utilities-background";
+//@import "../bower_components/bootstrap/scss/utilities-spacing";
+//@import "../bower_components/bootstrap/scss/utilities-responsive";
+
+
+
+/* --------------------------------------------------------
+   Custom application specific styles ----Test 
+   -------------------------------------------------------- */
+@import "base";
+
+
+html,
+
+/* Show it is fixed to the top */
+body {
+    min-height: 75rem;
+    padding-top: 2.5rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    color: #6c6f73;
+  }
+  
+#cover {
+    background: #222 url('../resources/images/stars.jpg') center center no-repeat;
+    background-size: cover;
+    color: white;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+#cover-caption {
+    width: 100%;
+}
+
+
+  
+  footer {
+    //background-color: #f5f5f5;
+    //background-color:black;
+    //color:blue;
+    margin-top: 50px;
+  }
+  
+//   .footer > .container {
+//     padding-right: 15px;
+//     padding-left: 15px;
+//   }
+
+  h1,h2,h3,h4,h5 {
+    color: #333;
+    padding-bottom: 30px;
+}
+
+h6 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 0.1rem;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+
+ol.breadcrumb {
+    padding: 5px 5px 10px 16px;
+    margin-right: 10px;
+    margin-left: 10px;
+    list-style: none;
+    //background-color: #6db33f;
+  }
+
+table#versionTable {
+   margin-top: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
