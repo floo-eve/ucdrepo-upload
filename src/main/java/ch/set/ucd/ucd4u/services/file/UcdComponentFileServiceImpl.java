@@ -353,7 +353,17 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
      */
     private void storeFiletoVersion(Version version, String absoluteFilePath, MultipartFile file) {
         log.debug("storefiletoVersion to " + absoluteFilePath);
+        log.debug("filename org: " + file.getOriginalFilename());
+
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
+        if (filename.contains("/")) {
+            // Windows path information have to be extracted
+            String[] subpaths = filename.split("/");
+            filename = subpaths[subpaths.length - 1];
+
+        }
+
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);

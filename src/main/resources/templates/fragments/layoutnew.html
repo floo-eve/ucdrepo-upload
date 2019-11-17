@@ -14,6 +14,8 @@
 
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/open-iconic-bootstrap.min.css}">
+
     <link rel="stylesheet" th:href="@{/css/app.css}" />
 
     <script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
@@ -66,7 +68,7 @@
         <th:block th:include="${template}" />
     </main>
     <!-- Footer -->
-    <footer th:fragment="footer()" class="footer font-small bg-dark">
+    <footer th:fragment="footer()" class="fixed-bottom footer font-small bg-dark">
 
         <!-- Copyright -->
         <div class="container">© 2019 ucd4u

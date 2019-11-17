@@ -9,8 +9,6 @@
 <body>
     <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
 
-
-
     <nav aria-label="breadcrumb">
 
         <ol class="breadcrumb" th:object="${version.ucdComponent}">
@@ -69,13 +67,20 @@
                 method="post" enctype="multipart/form-data">
                 <input name="absoluteParentPath" type="hidden" th:value="${version.getAbsoluteVersionPath()}" />
 
-                <div class="form-group">
-                    <label>File to add</label>
-                    <input type="file" name="file" />
-
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="file">
+                    <label class="custom-file-label" for="customFile">Choose File</label>
                 </div>
 
+                <script>
+                    // Add the following code if you want the name of the file appear on select
+                    $(".custom-file-input").on("change", function () {
+                        var fileName = $(this).val().split("\\").pop();
+                        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                    });
+                </script>
                 <button type=" submit" class="btn btn-outline-primary">Add</button>
+
             </form>
 
         </div>
@@ -91,8 +96,7 @@
             </thead>
             <tbody>
 
-
-                <tr th:each="file : ${version.files}">
+                <tr th:each="file , istat: ${version.files}">
                     <td th:text="${file.name}">File Name</td>
                     <td th:text="${file.absolutePath}">File Directory</td>
                     <td>
@@ -101,10 +105,10 @@
                             <form
                                 th:action="@{/{homebase}/type/{type}/component/{component}/version/deletefile/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post">
-                                <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addDir"
-                                    class="btn btn-outline-primary">Add Dir</a>
-                                <a th:if="${file.isDirectory()}" data-toggle="collapse" href="#addFile"
-                                    class="btn btn-outline-primary">Add File</a>
+                                <a th:if="${file.isDirectory()}" data-toggle="collapse"
+                                    th:href="|#addDir${istat.index}|" class="btn btn-outline-primary">Add Dir </a>
+                                <a th:if="${file.isDirectory()}" data-toggle="collapse"
+                                    th:href="|#addFile${istat.index}|" class="btn btn-outline-primary">Add File</a>
 
                                 <input name="filepath" type="hidden" th:value="${file.absolutePath}" />
                                 <button type="submit" class="btn btn-outline-primary">Delete
@@ -112,7 +116,7 @@
                                 </button>
                             </form>
                         </div>
-                        <div id="addDir" class="collapse">
+                        <div th:id="|addDir${istat.index}|" class="collapse addDir">
                             <form
                                 th:action="@{/{homebase}/type/{type}/component/{component}/version/createdir/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post">
@@ -126,17 +130,25 @@
                             </form>
 
                         </div>
-                        <div id="addFile" class="collapse">
+                        <div th:id="|addFile${istat.index}|" class="collapse addFile">
                             <form
                                 th:action="@{/{homebase}/type/{type}/component/{component}/version/addfile/{versionnummer}(homebase=${version.ucdComponent.homeBase},type=${version.ucdComponent.type}, component=${version.ucdComponent.name}, versionnummer=${version.directory})}"
                                 method="post" enctype="multipart/form-data">
                                 <input name="absoluteParentPath" type="hidden" th:value="${file.absolutePath}" />
 
-                                <div class="form-group">
-                                    <label>File to add</label>
-                                    <input type="file" name="file" />
 
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFile" name="file">
+                                    <label class="custom-file-label" for="customFile">Choose File</label>
                                 </div>
+
+                                <script>
+                                    // Add the following code if you want the name of the file appear on select
+                                    $(".custom-file-input").on("change", function () {
+                                        var fileName = $(this).val().split("\\").pop();
+                                        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                                    });
+                                </script>
 
                                 <button type=" submit" class="btn btn-outline-primary">Add</button>
                             </form>
