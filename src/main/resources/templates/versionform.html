@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/layoutnew :: head('New Version')">
+<head th:replace="fragments/layoutnew :: head('Create Version')">
     <meta charset="UTF-8">
     <title>Create Version</title>
 </head>
 
 <body>
     <div th:replace="fragments/layoutnew :: header (${homeBase})"></div>
+
 
     <nav aria-label="breadcrumb" th:object="${component}">
         <ol class="breadcrumb black" th:object="${version.ucdComponent}">
@@ -24,31 +25,59 @@
                     th:text="*{name}">Testapp</a></li>
         </ol>
     </nav>
+
     <div class="container">
 
-        <h2 th:text="|Create Version for ${version.ucdComponent.name}|">Create Version</h2>
+        <h2 th:text="|Create / Edit Version for ${version.ucdComponent.name}|">Create/Edit Version</h2>
 
-        <!-- th:action="@{'/version/{component}(component=*{ucdComponent.name})}"-->
+
+
         <form th:object="${version}"
             th:action="@{/{homeBase}/type/{type}/component/{component}/version(homeBase=*{ucdComponent.homeBase},type=*{ucdComponent.type}, component=*{ucdComponent.name})}"
-            method="post" enctype="multipart/form-data">
+            method="post">
+
+
             <input type="hidden" th:field="*{ucdComponent.name}" />
             <div class="form-group">
+
                 <label>Version</label>
                 <input type="text" th:field="*{directory}" class="form-control" placeholder="Version">
-            </div>
 
-            <div class="form-group">
-                <label>File to upload</label>
-                <input type="file" name="file" />
-
-            </div>
+            </div><!-- /input-group -->
+            <button type="submit" class="btn btn-outline-primary">Save</button>
+            <button disabled class="btn btn-outline-primary">Add File</button>
+            <button disabled class="btn btn-outline-primary">Add Dir</button>
 
 
 
-            <button type="submit" class="btn btn-outline-primary">Submit</button>
+            <table id="versionTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Path</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr th:each="file , istat: ${version.files}">
+                        <td th:text="${file.name}">File Name</td>
+                        <td th:text="${file.absolutePath}">File Directory</td>
+                        <td>
+
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
         </form>
+
     </div>
+
+
+
     <div th:replace="fragments/layoutnew :: footer"></div>
 
 </body>

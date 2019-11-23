@@ -102,15 +102,21 @@
 @import "base";
 
 
-
+html {
+  height: 100%;
+}
 
 /* Show it is fixed to the top */
 body {
     min-height: 75rem;
     padding-top: 5rem;
+    padding-bottom: 77px;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizelegibility;
     color: #6c6f73;
+    overflow: auto;
+    //min-height: 100%;
+    //height:100%;
   }
 
 h1,h2,h3,h4,h5 {
@@ -132,14 +138,17 @@ h6 {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: url(../resources/images/stars.jpg) center no-repeat black;
-  background-size: cover;
-  height: 100%;
-  display: contents;
+  background-image: url('../resources/images/background.jpg');
+  background-color: black; /* Used if the image is unavailable */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  //width: 100%;
+  //display: contents;
 }
 
 .login-box {
-  width: 320px;
+  width: 450px;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -181,7 +190,7 @@ h6 {
   background: none;
   color: white;
   float: left;
-  width: 80px;
+  width: 300px;
   margin: 0 10px;
   font-size: 18px;
 
@@ -262,17 +271,16 @@ div.custom-file {
 }
 
 
-/* not shure what to delete from this on */
+.footer {
+  position: relative;
+  margin-top: -20px; /* negative value of footer height */
+  height: 20px;
+  clear:both;
+  padding-top:20px;
+} 
 
 
 
-  
-  footer {
-    //background-color: #f5f5f5;
-    //background-color:black;
-    //color:blue;
-    margin-top: 50px;
-  }
   
 //   .footer > .container {
 //     padding-right: 15px;

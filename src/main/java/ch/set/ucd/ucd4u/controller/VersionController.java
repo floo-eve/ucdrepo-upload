@@ -53,12 +53,11 @@ public class VersionController {
      * @return
      */
     @PostMapping("/{homeBase}/type/{type}/component/{componentname}/version")
-    public String createVersion(@PathVariable String homeBase, @PathVariable String type,
-            @RequestParam("file") MultipartFile file, Version version, Model model) {
+    public String createVersion(@PathVariable String homeBase, @PathVariable String type, Version version,
+            Model model) {
 
         log.debug("new directory: " + version.getDirectory());
         log.debug(version.getUcdComponent().getName());
-        log.debug("file to upload: " + file.getOriginalFilename());
         log.debug("----");
 
         version.getUcdComponent().setHomeBase(homeBase);
@@ -69,10 +68,10 @@ public class VersionController {
         }
 
         ucdComponentService.saveVersion(version);
-        ucdComponentService.addFileToVersion(version, file);
 
-        return String.format("redirect:/%s/type/%s/component/%s", homeBase, type, version.getUcdComponent().getName());
-
+        // return String.format("redirect:/%s/type/%s/component/%s", homeBase, type,
+        // version.getUcdComponent().getName());
+        return "versionformedit";
     }
 
     /**

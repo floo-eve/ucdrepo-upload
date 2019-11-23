@@ -357,10 +357,13 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
+        log.debug("filename after cleanPath: " + filename);
+
         if (filename.contains("/")) {
             // Windows path information have to be extracted
             String[] subpaths = filename.split("/");
             filename = subpaths[subpaths.length - 1];
+            log.debug("filename extraced: " + filename);
 
         }
 
@@ -381,7 +384,7 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
                 log.debug("Copy 1 file to " + absoluteFilePath);
                 // Files.copy(inputStream,
                 // this.rootLocation.resolve(version.getDirectory()),StandardCopyOption.REPLACE_EXISTING);
-                Path path = Paths.get(absoluteFilePath, file.getOriginalFilename());
+                Path path = Paths.get(absoluteFilePath, filename);
                 log.debug("copy 1 file to " + path.toString());
                 Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
             }
