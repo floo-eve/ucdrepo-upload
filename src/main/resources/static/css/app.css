@@ -19,13 +19,19 @@
 /* --------------------------------------------------------
    Custom application specific styles ----Test 
    -------------------------------------------------------- */
+html {
+  height: 100%;
+}
+
 /* Show it is fixed to the top */
 body {
   min-height: 75rem;
   padding-top: 5rem;
+  padding-bottom: 77px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
   color: #6c6f73;
+  overflow: auto;
 }
 
 h1, h2, h3, h4, h5 {
@@ -45,14 +51,19 @@ h6 {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: url(../resources/images/stars.jpg) center no-repeat black;
+  background-image: url("../resources/images/background.jpg");
+  background-color: black;
+  /* Used if the image is unavailable */
+  background-position: center;
+  /* Center the image */
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
   background-size: cover;
-  height: 100%;
-  display: contents;
+  /* Resize the background image to cover the entire container */
 }
 
 .login-box {
-  width: 320px;
+  width: 450px;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -63,7 +74,7 @@ h6 {
 .login-box h1 {
   float: left;
   font-size: 40px;
-  border-bottom: 6px solid #6cb9f594;
+  border-bottom: 6px solid #8fdafd;
   margin-bottom: 50px;
   padding: 13px;
   color: white;
@@ -75,7 +86,7 @@ h6 {
   margin: 8px 0;
   padding: 8px 0;
   font-size: 20px;
-  border-bottom: 1px solid #6cb9f594;
+  border-bottom: 1px solid #8fdafd;
 }
 
 .login-textbox i {
@@ -90,7 +101,7 @@ h6 {
   background: none;
   color: white;
   float: left;
-  width: 80px;
+  width: 300px;
   margin: 0 10px;
   font-size: 18px;
 }
@@ -104,7 +115,7 @@ h6 {
 .login-box .btn {
   width: 100%;
   background: none;
-  border: 2px solid #6cb9f594;
+  border: 2px solid #8fdafd;
   color: white;
   padding: 5px;
   font-size: 18px;
@@ -113,7 +124,7 @@ h6 {
 }
 
 .login-box .btn:hover {
-  background-color: #6cb9f594;
+  background-color: #8fdafd;
   color: white;
 }
 
@@ -123,7 +134,7 @@ ol.breadcrumb {
   margin-left: 10px;
   text-transform: uppercase;
   list-style: none;
-  color: #6cb9f594;
+  color: #8fdafd;
 }
 
 ol.breadcrumb a {
@@ -137,25 +148,25 @@ ol.breadcrumb a {
 
 div #addDirToVersion {
   margin-top: 10px;
-  border: 2px solid #6cb9f594;
+  border: 2px solid #8fdafd;
   padding: 4px;
 }
 
 div #addFileToVersion {
   margin-top: 10px;
-  border: 2px solid #6cb9f594;
+  border: 2px solid #8fdafd;
   padding: 4px;
 }
 
 div.addDir {
   margin-top: 10px;
-  border: 2px solid #6cb9f594;
+  border: 2px solid #8fdafd;
   padding: 4px;
 }
 
 div.addFile {
   margin-top: 10px;
-  border: 2px solid #6cb9f594;
+  border: 2px solid #8fdafd;
   padding: 8px;
 }
 
@@ -163,13 +174,70 @@ div.custom-file {
   margin-bottom: 10px;
 }
 
-/* not shure what to delete from this on */
-footer {
-  margin-top: 50px;
+.footer {
+  position: relative;
+  margin-top: -20px;
+  /* negative value of footer height */
+  height: 20px;
+  clear: both;
+  padding-top: 20px;
+}
+
+.typeahead, .tt-query, .tt-hint {
+  border: 2px solid #CCCCCC;
+  border-radius: 8px;
+  font-size: 22px;
+  /* Set input font size */
+  height: 30px;
+  line-height: 30px;
+  outline: medium none;
+  padding: 8px 12px;
+  width: 396px;
+}
+
+.typeahead {
+  background-color: #FFFFFF;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097CF;
+}
+
+.tt-query {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+.tt-hint {
+  color: #999999;
+}
+
+.tt-menu {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 12px;
+  padding: 8px 0;
+  width: 422px;
+}
+
+.tt-suggestion {
+  font-size: 22px;
+  /* Set suggestion dropdown font size */
+  padding: 3px 20px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  background-color: #0097CF;
+  color: #FFFFFF;
+}
+
+.tt-suggestion p {
+  margin: 0;
 }
 
 table#versionTable {
   margin-top: 20px;
 }
-
 /*# sourceMappingURL=app.css.map */
