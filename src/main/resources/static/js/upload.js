@@ -32,7 +32,16 @@ function uploadFile(e) {
 
     if (labelElement.innerHTML != "Choose File" && labelElement.innerHTML != "") {
         progressBar.parentElement.classList.remove("invisible");
+        var message = this.querySelector(".alert");
+        message.classList.remove("invisible","collapse");
 
+
+        document.querySelectorAll(".btn").forEach(item => {
+            // disable all buttons
+            item.setAttribute("disabled", "disabled");
+            item.classList.add("disabled");
+
+        });
 
         xhr.open('POST', actionUrl);
         xhr.upload.addEventListener("progress", e => {
@@ -46,6 +55,7 @@ function uploadFile(e) {
 
         xhr.upload.addEventListener("loadend", e => {
             console.log(e);
+            message.innerHTML="Saving file on server...";
             //showAlertFileSize("End",e);
         });
 
