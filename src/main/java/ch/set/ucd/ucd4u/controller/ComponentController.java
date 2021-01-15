@@ -82,9 +82,12 @@ public class ComponentController {
     }
 
     /**
-     * Get all components.
+     * Get all components of a certain homebase and subdirectory
      * 
+     * @param homeBase rootdir for these components
+     * @param type subdir for these components
      * @param model
+     * 
      * @return
      */
     @GetMapping("/{homeBase}/type/{type}/component/list")
@@ -99,6 +102,8 @@ public class ComponentController {
         log.debug("list components");
         return "components";
     }
+
+     
 
     /**
      * Load the edit component page for the component with the specified name.
@@ -173,4 +178,6 @@ public class ComponentController {
 
         return String.format("redirect:/%s/type/%s/component/list", homeBase, type);
     }
+
+
 }

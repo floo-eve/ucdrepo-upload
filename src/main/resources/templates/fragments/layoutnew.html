@@ -53,9 +53,28 @@
                     <a class="nav-link" href="#">Logout</a>
                 </li>
             </ul>
-            <form class="form-inline mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+            <form class="form-inline mt-2 mt-md-0"  th:action="@{/component/search}" method="POST" id="searchForm">
+                <!--input class="form-control mr-sm-2" name="searchValue" type="text" placeholder="Search" aria-label="Search">
+                
+                
+<button class="btn btn-outline-primary my-2 my-sm-0 mt-2"  id="search">Search</button>-->
+
+<div class="input-group">
+  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" name="searchValue" placeholder="Search">
+  <div class="input-group-append">
+    <button class="btn btn-outline-primary" id="search" type="submit">Search</button>
+    <button id="searchDropDown" type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu" id="searchResult">
+      <!--<a class="dropdown-item" href="#">Action</a>
+      <a class="dropdown-item" href="#">Another action</a>
+      <a class="dropdown-item" href="#">Something else here</a>
+      <div role="separator" class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Separated link</a>-->
+    </div>
+  </div>
+</div>
             </form>
         </div>
     </nav>
@@ -74,7 +93,7 @@
         <div class="container">© 2019 ucd4u
         </div>
 
-
+      <script type="text/javascript" th:src="@{/js/search.js}"></script>
     </footer>
 
 </body>

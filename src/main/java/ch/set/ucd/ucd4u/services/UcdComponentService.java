@@ -18,6 +18,8 @@ public interface UcdComponentService {
 
     public Set<UcdComponent> findAllComponents(String homeBase);
 
+    public Set<UcdComponent> searchByName(String searchString);
+
     public List<String> findAllTypes(String homeBase);
 
     public UcdComponent save(UcdComponent component);

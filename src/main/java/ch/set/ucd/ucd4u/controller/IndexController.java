@@ -14,7 +14,6 @@ public class IndexController {
 
     @RequestMapping({ "", "/", "index", "index.html" })
     public String index() {
-        log.debug("Index Page: yeah");
         return "index";
     }
 

@@ -123,6 +123,28 @@ public class UcdComponentFileServiceImpl implements UcdComponentService {
         return new HashSet<>(map.values());
     }
 
+
+    /**
+     * 
+     */
+    public Set<UcdComponent> searchByName(String searchString) {
+        
+        HashSet<UcdComponent> componentSets = new HashSet<>();
+        
+        for (String reponame : this.repoMaps.keySet()) {
+            Map<String, UcdComponent> map = this.repoMaps.get(reponame);
+            for (String name : map.keySet()) {
+                if (name.toLowerCase().contains(searchString.toLowerCase())) {
+                    componentSets.add(map.get(name));
+                }
+
+            }
+        }
+        
+
+        return componentSets;
+    }
+
     /**
      * 
      */
